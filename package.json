@@ -19,18 +19,25 @@
     "test:coverage": "nwb test-react --coverage",
     "test:watch": "nwb test-react --server"
   },
-  "dependencies": {},
-  "peerDependencies": {
-    "react": "16.x"
+  "dependencies": {
+    "prop-types": "^15.6.2"
   },
   "devDependencies": {
     "nwb": "0.23.x",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3"
+    "react": "^16.6.3"
   },
-  "author": "",
-  "homepage": "",
+  "peerDependencies": {
+    "react": "^16.x"
+  },
+  "author": {
+    "name": "v1ndic4te",
+    "email": "vndc4t0r@gmail.com"
+  },
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TimboKZ/Rammy/issues"
+  },
+  "homepage": "https://github.com/v1ndic4te/react-context-menu-wrapper#readme",
   "repository": "",
   "keywords": [
     "react-component"

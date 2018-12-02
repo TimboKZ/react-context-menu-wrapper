@@ -1,0 +1,68 @@
+/*
+Some global styles to make the page look nicer.
+*/
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background-color: #ccc;
+    padding: 1rem;
+}
+
+.container {
+    background-color: #fff;
+    padding: 2rem;
+}
+
+.my-divider {
+    margin: 4rem 0;
+}
+
+/*
+The styles below are not a part of `react-context-menu-wrapper` package, they are included to make the demo
+look better.
+ */
+.my-dropdown {
+    background-color: #fafafa;
+    border: solid 1px #ccc;
+    border-radius: 4px;
+}
+
+.my-item {
+    display: block;
+    padding: 10px;
+}
+
+.my-button {
+    font-weight: bold;
+}
+
+.my-button:hover {
+    background-color: rgba(112, 160, 207, 0.25);
+}
+
+.my-separator {
+    background-color: #ccc !important;
+    height: 1px !important;
+    margin: 0 !important;
+}
+
+/*
+Fix for Bulma conflicting with Prism.js
+ */
+pre .tag, pre .number {
+    display: inline;
+    padding: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-align: inherit;
+    vertical-align: inherit;
+    border-radius: inherit;
+    font-weight: inherit;
+    white-space: inherit;
+    background: inherit;
+    margin: inherit;
+}
+

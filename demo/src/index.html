@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism.min.css"/>
+    <link rel="stylesheet" href="index.css"/>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title is-2"><code>react-context-menu-wrapper</code> Demo</h1>
+        <p class="title is-4">
+            Check project's <a href="https://github.com/v1ndic4te/react-context-menu-wrapper">GitHub
+            page</a> for more info.
+        </p>
+
+        <hr class="my-divider"/>
+
+        <h3 class="title is-3 has-text-grey-light">Global context menu example</h3>
+        <h4 class="title is-4">Click anywhere to open a global menu.</h4>
+        <div id="global-example"></div>
+        <pre data-src="GlobalExample.jsx"/>
+        Click on the green box below to open a context menu styled using Bulma.
+        Click on the green box below to open a context menu styled using React.
+        <div id="<%= htmlWebpackPlugin.options.mountId %>"></div>
+        <br/>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/plugins/file-highlight/prism-file-highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-jsx.min.js"></script>
+</body>
+</html>
