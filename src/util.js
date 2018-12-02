@@ -19,11 +19,6 @@ export function windowExists() {
     return typeof window !== 'undefined';
 }
 
-export function dispatchWindowEvent(eventName, detail = {}) {
-    const event = new CustomEvent(eventName, {detail});
-    window.dispatchEvent(event);
-}
-
 export function prepareDataStorage() {
     if (window._reactContextMenuWrapperData) return;
 
@@ -73,6 +68,17 @@ export function getPropertySize(node, property) {
 export function showContextMenu(id, event = null) {
     if (event) event.preventDefault();
 
+}
+
+export function dispatchWindowEvent(eventName, detail = {}) {
+    let event;
+    if (typeof window.CustomEvent === 'function') {
+        event = new window.CustomEvent(eventName, {detail});
+    } else {
+        event = document.createEvent('CustomEvent');
+        event.initCustomEvent(eventName, false, true, detail);
+    }
+    window.dispatchEvent(event);
 }
 
 export function hideAllContextMenus() {

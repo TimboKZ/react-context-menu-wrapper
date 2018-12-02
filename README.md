@@ -20,9 +20,9 @@ Features:
 > Please [create an issue](https://github.com/v1ndic4te/react-context-menu-wrapper/issues/new) if you find a bug or
 > want to suggest a new feature.
 
-# Demo
+# Usage examples
 
-[Click here to view some demos.](https://v1ndic4te.github.io/react-context-menu-wrapper/)
+[Click here to view demos with example code.](https://v1ndic4te.github.io/react-context-menu-wrapper/)
 
 # Installation
 
