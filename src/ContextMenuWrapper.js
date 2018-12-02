@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 import {
     warn,
-    EventName,
+    InternalEvent,
     TriggerContext,
     generateInternalId,
     registerGlobalContextMenu,
@@ -17,8 +17,9 @@ import {
     registerShowIntent,
     setLastTriggerData,
     getLastTriggerData,
+    emitContextMenuEvent,
     getPropertySize,
-    hideAllContextMenus,
+    hideAllContextMenus, ContextMenuEvent,
 } from './util';
 
 export default class ContextMenuWrapper extends Component {
@@ -69,8 +70,8 @@ export default class ContextMenuWrapper extends Component {
         // Props that toggle simple event listeners
         this.toggleProps = [
             // Property, Target, Event, Handler
-            [null, window, EventName.HideAllContextMenus, this.hide],
-            [null, window, EventName.TryShowContextMenu, this.handleShowRequest],
+            [null, window, InternalEvent.HideAllContextMenus, this.hide],
+            [null, window, InternalEvent.TryShowContextMenu, this.handleShowRequest],
             ['hideOnScroll', document, 'scroll', this.hide],
             ['hideOnWindowResize', window, 'resize', this.hide],
         ];
@@ -84,8 +85,8 @@ export default class ContextMenuWrapper extends Component {
 
     updateGlobalRegistration(mounted, oldValue = null) {
         if (!oldValue) {
-            if (mounted) window.addEventListener(EventName.DoShowContextMenu, this.handleShowCommand);
-            else window.removeEventListener(EventName.DoShowContextMenu, this.handleShowCommand);
+            if (mounted) window.addEventListener(InternalEvent.DoShowContextMenu, this.handleShowCommand);
+            else window.removeEventListener(InternalEvent.DoShowContextMenu, this.handleShowCommand);
         }
 
         const isGlobal = this.props.global;
@@ -192,8 +193,18 @@ export default class ContextMenuWrapper extends Component {
     }
 
     show = showIntent => {
-        if (this.props.onShow) this.props.onShow(getLastTriggerData(this.internalId), this.getPublicProps());
+        const data = getLastTriggerData(this.internalId);
+        const publicProps = this.getPublicProps();
+
+        if (this.props.onShow) this.props.onShow(data, publicProps);
+        emitContextMenuEvent({
+            externalId: this.props.id,
+            eventName: ContextMenuEvent.Show,
+            data,
+            publicProps,
+        });
         hideAllContextMenus();
+
         this.setState({visible: true});
 
         const clickX = showIntent.eventDetails.x;
@@ -226,7 +237,6 @@ export default class ContextMenuWrapper extends Component {
         if (top) style.top = `${clickY + 5}px`;
         if (bottom) style.top = `${clickY - rootH - 5}px`;
 
-        // TODO: Create a global event that notifies remote listeners about show/hide
         this.setState({
             visible: true,
             style: {
@@ -238,8 +248,17 @@ export default class ContextMenuWrapper extends Component {
 
     hide = () => {
         if (this.state.visible) {
+            const data = getLastTriggerData(this.internalId);
+            const publicProps = this.getPublicProps();
+
             this.setState({visible: false});
-            if (this.props.onHide) this.props.onHide(getLastTriggerData(this.internalId), this.getPublicProps());
+            if (this.props.onHide) this.props.onHide(data, publicProps);
+            emitContextMenuEvent({
+                externalId: this.props.id,
+                eventName: ContextMenuEvent.Hide,
+                data,
+                publicProps,
+            });
         }
     };
 

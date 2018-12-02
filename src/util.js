@@ -10,10 +10,15 @@ export function warn(/*arguments*/) {
     console.warn.apply(this, args);
 }
 
-export const EventName = {
-    TryShowContextMenu: 'react-context-menu-wrapper-try-show',
-    DoShowContextMenu: 'react-context-menu-wrapper-do-show',
-    HideAllContextMenus: 'react-context-menu-wrapper-hide-all',
+export const ContextMenuEvent = {
+    Show: 'show',
+    Hide: 'hide',
+};
+
+export const InternalEvent = {
+    TryShowContextMenu: '__rcmw-try-show',
+    DoShowContextMenu: '__rcmw-do-show',
+    HideAllContextMenus: '__rcmw-hide-all',
 };
 
 export const TriggerType = {
@@ -24,7 +29,7 @@ export const TriggerType = {
 export const TriggerContext = {
     Local: 'local', // When requested via a local listener
     Global: 'global', // When requested via a global listener
-    Cancel: 'cancel', // When requested a cancel event is manually requested
+    Cancel: 'cancel', // When a cancel event is requested
 };
 
 export function getPropertySize(node, property) {
@@ -47,8 +52,12 @@ export function initWindowState() {
     window._reactContextMenuWrapper = {
         globalMenus: [], // Array of IDs of menus that are currently global
         lastTriggerDataMap: {}, // Map of event IDs to their last 'context-menu' events
+
         intentTimeout: null, // Holds the debounce timeout for context menu show intents
         intentWinner: null, // Holds the deepest menu intent at the moment debounce is triggered
+
+        globalContextMenuEventListeners: [], // Array of global listeners defined by the user
+        contextMenuEventListenersMap: {}, // Map of ID listeners defined by the user
     };
 
     document.addEventListener('contextmenu', globalContextMenuListener);
@@ -99,7 +108,7 @@ const notifyIntentWinner = () => {
         return;
     }
 
-    dispatchWindowEvent(EventName.DoShowContextMenu, winner);
+    dispatchWindowEvent(InternalEvent.DoShowContextMenu, winner);
 };
 
 /**
@@ -170,11 +179,88 @@ export function getLastTriggerData(internalId) {
 
 /**
  * @param {object} data
+ * @param {string} [data.externalId]
+ * @param {string} data.eventName
+ * @param {*} data.data
+ * @param {object} data.publicProps
+ */
+export function emitContextMenuEvent(data) {
+    const store = window._reactContextMenuWrapper;
+    const id = data.externalId;
+
+    let listenerArray;
+    if (id) {
+        const map = store.contextMenuEventListenersMap;
+        if (!map[id]) map[id] = [];
+        listenerArray = map[id];
+    } else {
+        listenerArray = store.globalContextMenuEventListeners;
+    }
+
+    for (const listener of listenerArray) {
+        listener(data.eventName, data.data, data.publicProps);
+    }
+}
+
+/**
+ * When both parameters are provided, registers a listener for a specific context menu ID. If the first argument is
+ * null, registers a global context menu listener.
+ *
+ * @param {string} [id]
+ * @param {function} listener
+ */
+export const addContextMenuEventListener = (id, listener) => {
+    if (!listener) warn('Tried to register a context menu state listener but no listener object was provided.');
+    const store = window._reactContextMenuWrapper;
+
+    let listenerArray;
+    if (id) {
+        const map = store.contextMenuEventListenersMap;
+        if (!map[id]) map[id] = [];
+        listenerArray = map[id];
+    } else {
+        listenerArray = store.globalContextMenuEventListeners;
+    }
+
+    if (listenerArray.indexOf(listener) !== -1) {
+        warn(`Tried to add the same event listener to \'${id}\' twice.`);
+    } else {
+        listenerArray.push(listener);
+    }
+};
+
+/**
+ * When both parameters are provided, removes a listener from a specific context menu ID. If the first argument is
+ * null, removes a global context menu listener.
+ *
+ * @param {string} [id]
+ * @param {function} listener
+ */
+export const removeContextMenuEventListener = (id, listener) => {
+    if (!listener) warn('Tried to register a context menu state listener but no listener object was provided.');
+
+    let listenerArray;
+    if (id) {
+        const map = store.contextMenuEventListenersMap;
+        if (!map[id]) map[id] = [];
+        listenerArray = map[id];
+    } else {
+        listenerArray = store.globalContextMenuEventListeners;
+    }
+
+    let index = listenerArray.indexOf(listener);
+    if (index > -1) {
+        listenerArray.splice(index, 1);
+    }
+};
+
+/**
+ * @param {object} data
  * @param {string} [data.id]    External ID of the context menu
  * @param {object} [data.data]  Data associated with the event
  * @param {*} [data.event]      ContextMenu event that triggered the logic
- * @param {*} [data.x]          x-coordinate to show the menu at
- * @param {*} [data.y]          y-coordinate to show the menu at
+ * @param {number} [data.x]     x-coordinate to show the menu at
+ * @param {number} [data.y]     y-coordinate to show the menu at
  */
 export const showContextMenu = (data) => {
     const eventDetails = {
@@ -194,11 +280,11 @@ export const showContextMenu = (data) => {
     }
     if (data.x) eventDetails.x = data.x;
     if (data.y) eventDetails.y = data.y;
-    dispatchWindowEvent(EventName.TryShowContextMenu, {eventDetails, externalId: data.id, data: data.data});
+    dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId: data.id, data: data.data});
 };
 
 export function hideAllContextMenus() {
-    dispatchWindowEvent(EventName.HideAllContextMenus);
+    dispatchWindowEvent(InternalEvent.HideAllContextMenus);
 }
 
 export const cancelOtherContextMenus = event => {
@@ -226,7 +312,7 @@ export const prepareContextMenuHandlers = (externalId, data = null) => {
                 x: event.clientX,
                 y: event.clientY,
             };
-            dispatchWindowEvent(EventName.TryShowContextMenu, {eventDetails, externalId, data});
+            dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId, data});
         },
     };
 };
@@ -241,5 +327,5 @@ function globalContextMenuListener(event) {
         x: event.clientX,
         y: event.clientY,
     };
-    dispatchWindowEvent(EventName.TryShowContextMenu, {eventDetails, externalId: null, data: null});
+    dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId: null, data: null});
 }
