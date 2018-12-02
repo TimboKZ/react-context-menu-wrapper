@@ -2,12 +2,16 @@
 Some global styles to make the page look nicer.
 */
 html, body {
-    overflow-y: scroll;
     height: 100%;
     margin: 0;
 }
 
+html {
+    overflow-y: hidden;
+}
+
 body {
+    overflow-y: scroll;
     background-color: #ccc;
     padding: 1rem;
 }
@@ -29,6 +33,7 @@ body {
     font-size: 1.4rem;
     padding: 1rem;
 }
+
 .my-box-nested {
     background-color: rgba(255, 255, 255, 0.3);
     border: solid 1px rgba(0, 0, 0, 0.2);
