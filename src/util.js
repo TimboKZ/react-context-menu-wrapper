@@ -11,7 +11,8 @@ export function warn(/*arguments*/) {
 }
 
 export const EventNames = {
-    ShowContextMenu: 'react-context-menu-wrapper-show',
+    TryShowContextMenu: 'react-context-menu-wrapper-try-show',
+    DoShowContextMenu: 'react-context-menu-wrapper-do-show',
     HideAllContextMenus: 'react-context-menu-wrapper-hide-all',
 };
 
@@ -24,7 +25,9 @@ export function prepareDataStorage() {
 
     window._reactContextMenuWrapper = {
         globalMenus: [], // Array of IDs of menus that are currently global
-        lastEventMap: {}, // Map of event IDs to their last 'context-menu' events
+        lastTriggerDataMap: {}, // Map of event IDs to their last 'context-menu' events
+        intentTimeout: null,
+        intentWinner: null,
     };
 }
 
@@ -50,13 +53,67 @@ export function removeGlobalContextMenu(internalId) {
     }
 }
 
+export function dispatchWindowEvent(eventName, detail = {}) {
+    let event;
+    if (typeof window.CustomEvent === 'function') {
+        event = new window.CustomEvent(eventName, {detail});
+    } else {
+        event = document.createEvent('CustomEvent');
+        event.initCustomEvent(eventName, false, true, detail);
+    }
+    window.dispatchEvent(event);
+}
+
+const notifyIntentWinner = () => {
+    const store = window._reactContextMenuWrapper;
+    const winner = store.intentWinner;
+    store.intentTimeout = null;
+    store.intentWinner = null;
+    if (!winner) return;
+
+    dispatchWindowEvent(EventNames.DoShowContextMenu, winner);
+    // console.log(`${winner.eventDetails.preventDefault ? 'Local' : 'Global'} won!`);
+};
+
+/**
+ * Called by 'ContextMenuWrapper' instances when they receive a show request. This method is responsible for resolving
+ * which context menu should actually be shown.
+ *
+ * Chooses the context menu associated with the bottom-most DOM node in the tree.
+ *
+ * @param {object} data
+ * @param {string} data.internalId
+ * @param {string} data.externalId
+ * @param {object} data.eventDetails  The object that triggered the context menu event.
+ * @param {*}      data.data          Data associated with the trigger.
+ */
+export function registerShowIntent(data) {
+    const store = window._reactContextMenuWrapper;
+
+    if (store.intentWinner) {
+        const ourSource = data.eventDetails.triggerSource;
+        const otherSource = store.intentWinner.eventDetails.triggerSource;
+
+        // If we have high precedence than our opponent, we win the intent.
+        if (ourSource.contains(otherSource)) {
+            return;
+        }
+        // TODO: Handle the weird case when none of the sources contain the other.
+    }
+    // console.log(`${data.eventDetails.preventDefault ? 'Local' : 'Global'} proceeds!`);
+    store.intentWinner = data;
+
+    clearTimeout(store.intentTimeout);
+    store.intentTimeout = setTimeout(notifyIntentWinner, 20);
+}
+
 export function setLastTriggerData(internalId, data) {
-    const map = window._reactContextMenuWrapper.lastEventMap;
+    const map = window._reactContextMenuWrapper.lastTriggerDataMap;
     map[internalId] = data;
 }
 
 export function getLastTriggerData(internalId) {
-    const map = window._reactContextMenuWrapper.lastEventMap;
+    const map = window._reactContextMenuWrapper.lastTriggerDataMap;
     return map[internalId];
 }
 
@@ -68,17 +125,6 @@ export function getPropertySize(node, property) {
 export function showContextMenu(id, event = null) {
     if (event) event.preventDefault();
 
-}
-
-export function dispatchWindowEvent(eventName, detail = {}) {
-    let event;
-    if (typeof window.CustomEvent === 'function') {
-        event = new window.CustomEvent(eventName, {detail});
-    } else {
-        event = document.createEvent('CustomEvent');
-        event.initCustomEvent(eventName, false, true, detail);
-    }
-    window.dispatchEvent(event);
 }
 
 export function hideAllContextMenus() {
@@ -93,7 +139,14 @@ export function hideAllContextMenus() {
 export const prepareContextMenuHandlers = (externalId, data = null) => {
     return {
         onContextMenu: event => {
-            dispatchWindowEvent(EventNames.ShowContextMenu, {event, externalId, data});
+            const eventDetails = {
+                preventDefault: event.preventDefault,
+                triggerSource: event.currentTarget,
+                triggerTarget: event.target,
+                x: event.clientX,
+                y: event.clientY,
+            };
+            dispatchWindowEvent(EventNames.TryShowContextMenu, {eventDetails, externalId, data});
         },
     };
 };

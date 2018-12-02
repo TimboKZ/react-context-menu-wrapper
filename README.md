@@ -15,6 +15,7 @@ dropdowns [from Bootstrap](https://getbootstrap.com/docs/4.1/components/dropdown
 Features:
 * Supports global and component-local context menus.
 * Supports long-press for mobile devices.
+* Correctly displays context menus on nested components.
 * **Does not provide out-of-the-box styling.**
 
 > Please [create an issue](https://github.com/v1ndic4te/react-context-menu-wrapper/issues/new) if you find a bug or

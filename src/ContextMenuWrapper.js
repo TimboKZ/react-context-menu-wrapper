@@ -13,6 +13,7 @@ import {
     generateInternalId,
     registerGlobalContextMenu,
     removeGlobalContextMenu,
+    registerShowIntent,
     setLastTriggerData,
     getLastTriggerData,
     getPropertySize,
@@ -55,6 +56,8 @@ export default class ContextMenuWrapper extends Component {
             visible: false,
             style: {},
         };
+
+        // Generate internal ID and relevant intent handling function
         this.internalId = generateInternalId();
 
         // Reference to our own <div>
@@ -64,8 +67,8 @@ export default class ContextMenuWrapper extends Component {
         this.toggleProps = [
             // Property, Target, Event, Handler
             [null, window, EventNames.HideAllContextMenus, this.hide],
-            ['id', window, EventNames.ShowContextMenu, this.handleContextMenu],
-            ['global', document, 'contextmenu', this.handleContextMenu],
+            ['id', window, EventNames.TryShowContextMenu, this.handleShowRequest],
+            ['global', document, 'contextmenu', this.handleShowRequest],
             ['hideOnScroll', document, 'scroll', this.hide],
             ['hideOnWindowResize', window, 'resize', this.hide],
         ];
@@ -78,9 +81,13 @@ export default class ContextMenuWrapper extends Component {
     }
 
     updateGlobalRegistration(mounted, oldValue = null) {
+        if (!oldValue) {
+            if (mounted) window.addEventListener(EventNames.DoShowContextMenu, this.handleShowCommand);
+            else window.removeEventListener(EventNames.DoShowContextMenu, this.handleShowCommand);
+        }
+
         const isGlobal = this.props.global;
         if (oldValue !== null && isGlobal === oldValue) return;
-
         if (isGlobal && !mounted) removeGlobalContextMenu(this.internalId);
         else if (isGlobal) registerGlobalContextMenu(this.internalId);
     }
@@ -122,23 +129,49 @@ export default class ContextMenuWrapper extends Component {
         this.updateGlobalRegistration(false);
     }
 
-    handleContextMenu = (event) => {
-        if (event.detail && event.detail.externalId) {
+    handleShowCommand = (event) => {
+        const showIntent = event.detail;
+        if (showIntent.internalId !== this.internalId) return;
+        setLastTriggerData(this.internalId, showIntent.data);
+        this.show(showIntent);
+    };
+
+    handleShowRequest = (event) => {
+        const detail = event.detail;
+        if (detail && detail.externalId) {
             // Was triggered by a remote event.
             const ourId = this.props.id;
-            const requestId = event.detail.externalId;
-            const realEvent = event.detail.event;
+            const requestId = detail.externalId;
 
             // Do nothing if ID does not match ours
             if (!ourId || ourId !== requestId) return;
 
-            const data = event.detail.data;
-            setLastTriggerData(this.internalId, data);
-            this.show(realEvent);
+            // ...otherwise process this event as-if it was meant for us (but we're not sure yet, there may be other
+            // handlers that have precedence over us.
+            const eventDetails = detail.eventDetails;
+            if (eventDetails.preventDefault) eventDetails.preventDefault();
+            const showIntent = {
+                internalId: this.internalId,
+                externalId: ourId,
+                eventDetails,
+                data: detail.data,
+            };
+            registerShowIntent(showIntent);
         } else {
-            // Was triggered by a handler we setup.
-            setLastTriggerData(this.internalId, null);
-            this.show(event);
+            // Was triggered by a global window handler we setup in this class.
+            event.preventDefault();
+            const showIntent = {
+                internalId: this.internalId,
+                externalId: null,
+                eventDetails: {
+                    triggerSource: event.currentTarget,
+                    triggerTarget: event.target,
+                    x: event.clientX,
+                    y: event.clientY,
+                },
+                data: detail.data,
+            };
+            registerShowIntent(showIntent);
         }
     };
 
@@ -152,10 +185,9 @@ export default class ContextMenuWrapper extends Component {
         else if (this.props.hideOnSelfClick) return this.hide();
     };
 
-    show = event => {
-        event.preventDefault();
-        const clickX = event.clientX;
-        const clickY = event.clientY;
+    show = shownIntent => {
+        const clickX = shownIntent.eventDetails.x;
+        const clickY = shownIntent.eventDetails.y;
         const screenW = window.innerWidth;
         const screenH = window.innerHeight;
 
