@@ -9,7 +9,8 @@ import PropTypes from 'prop-types';
 
 import {
     warn,
-    EventNames,
+    EventName,
+    TriggerType,
     generateInternalId,
     registerGlobalContextMenu,
     removeGlobalContextMenu,
@@ -66,9 +67,8 @@ export default class ContextMenuWrapper extends Component {
         // Props that toggle simple event listeners
         this.toggleProps = [
             // Property, Target, Event, Handler
-            [null, window, EventNames.HideAllContextMenus, this.hide],
-            ['id', window, EventNames.TryShowContextMenu, this.handleShowRequest],
-            ['global', document, 'contextmenu', this.handleShowRequest],
+            [null, window, EventName.HideAllContextMenus, this.hide],
+            ['id', window, EventName.TryShowContextMenu, this.handleShowRequest],
             ['hideOnScroll', document, 'scroll', this.hide],
             ['hideOnWindowResize', window, 'resize', this.hide],
         ];
@@ -82,8 +82,8 @@ export default class ContextMenuWrapper extends Component {
 
     updateGlobalRegistration(mounted, oldValue = null) {
         if (!oldValue) {
-            if (mounted) window.addEventListener(EventNames.DoShowContextMenu, this.handleShowCommand);
-            else window.removeEventListener(EventNames.DoShowContextMenu, this.handleShowCommand);
+            if (mounted) window.addEventListener(EventName.DoShowContextMenu, this.handleShowCommand);
+            else window.removeEventListener(EventName.DoShowContextMenu, this.handleShowCommand);
         }
 
         const isGlobal = this.props.global;
@@ -131,7 +131,14 @@ export default class ContextMenuWrapper extends Component {
 
     handleShowCommand = (event) => {
         const showIntent = event.detail;
-        if (showIntent.internalId !== this.internalId) return;
+
+        if (
+            // Does not match our ID
+            !(showIntent.internalId && showIntent.internalId === this.internalId)
+            // AND doesn't trigger us globally
+            && !(this.props.global && showIntent.eventDetails.triggerType === TriggerType.Global)
+        ) return;
+
         setLastTriggerData(this.internalId, showIntent.data);
         this.show(showIntent);
     };
@@ -149,7 +156,6 @@ export default class ContextMenuWrapper extends Component {
             // ...otherwise process this event as-if it was meant for us (but we're not sure yet, there may be other
             // handlers that have precedence over us.
             const eventDetails = detail.eventDetails;
-            if (eventDetails.preventDefault) eventDetails.preventDefault();
             const showIntent = {
                 internalId: this.internalId,
                 externalId: ourId,
@@ -158,20 +164,7 @@ export default class ContextMenuWrapper extends Component {
             };
             registerShowIntent(showIntent);
         } else {
-            // Was triggered by a global window handler we setup in this class.
-            event.preventDefault();
-            const showIntent = {
-                internalId: this.internalId,
-                externalId: null,
-                eventDetails: {
-                    triggerSource: event.currentTarget,
-                    triggerTarget: event.target,
-                    x: event.clientX,
-                    y: event.clientY,
-                },
-                data: detail.data,
-            };
-            registerShowIntent(showIntent);
+            // TODO: Malformed event, nothing we can really do. Perhaps show a warning?
         }
     };
 
@@ -185,9 +178,9 @@ export default class ContextMenuWrapper extends Component {
         else if (this.props.hideOnSelfClick) return this.hide();
     };
 
-    show = shownIntent => {
-        const clickX = shownIntent.eventDetails.x;
-        const clickY = shownIntent.eventDetails.y;
+    show = showIntent => {
+        const clickX = showIntent.eventDetails.x;
+        const clickY = showIntent.eventDetails.y;
         const screenW = window.innerWidth;
         const screenH = window.innerHeight;
 

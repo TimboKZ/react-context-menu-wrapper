@@ -4,10 +4,10 @@
  * @licence GPL-3.0
  */
 
-import {windowExists, prepareDataStorage} from './util';
+import {windowExists, initWindowState} from './util';
 
 if (!windowExists()) throw new Error('\'window\' is not available! Are we running in the browser?');
-prepareDataStorage();
+initWindowState();
 
 export {default as ContextMenuWrapper} from './ContextMenuWrapper';
 export {showContextMenu, hideAllContextMenus, prepareContextMenuHandlers} from './util';

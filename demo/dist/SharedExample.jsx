@@ -13,7 +13,8 @@ export class SharedExample extends React.Component {
         };
     }
 
-    toggleCurrentOwnerState = () => {
+    toggleCurrentOwnerState = event => {
+        event.preventDefault();
         const selected = this.state.selected;
         this.setState({
             selected: {
