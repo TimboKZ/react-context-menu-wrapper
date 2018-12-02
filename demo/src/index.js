@@ -17,3 +17,5 @@ import {LocalExample} from './LocalExample';
 render(<LocalExample/>, document.querySelector('#local-example'));
 import {SharedExample} from './SharedExample';
 render(<SharedExample/>, document.querySelector('#shared-example'));
+import {NestedExample} from './NestedExample';
+render(<NestedExample/>, document.querySelector('#nested-example'));
