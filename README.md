@@ -11,9 +11,10 @@ have to style the context menu yourself. This is useful when your CSS framework 
 dropdowns [from Bootstrap](https://getbootstrap.com/docs/4.1/components/dropdowns/) or
 [from Bulma](https://bulma.io/documentation/components/dropdown/).
 
-Features:
+**Features:**
 * Supports global and component-local context menus.
 * Supports long-press for mobile devices.
+* Lets you trigger context menus programmatically.  
 * Correctly displays context menus on nested components.
 * **Does not provide out-of-the-box styling.**
 
@@ -34,9 +35,11 @@ npm install --save react-context-menu-wrapper
 # The gist
 
 Here's an example of a simple context menu. It doesn't showcase many features, but it should give you a basic 
-idea of how this component works.
+idea of how this component works. This particular context menu doesn't have any buttons - don't worry, it's pretty easy 
+to add them. Take a look at [demos and exmaples](https://v1ndic4te.github.io/react-context-menu-wrapper/) to find out
+ more.
 
-![Gif of the context menu library in action.](./demo/public/context-menu-boxes.gif)
+![Gif of the context menu library in action.](https://v1ndic4te.github.io/react-context-menu-wrapper/context-menu-boxes.gif)
 
 ```jsx
 // Import our packages, the usual way.
@@ -88,12 +91,12 @@ class ComponentWithAContextMenu extends Component {
 }
 ```
 
-# Example with custom styling
+# `ContextMenuWrapper` component
 ```
 // Coming.
 ```
 
-# Bulma example
+# Helper functions
 ```
 // Coming.
 ```

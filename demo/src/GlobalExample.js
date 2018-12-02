@@ -46,7 +46,7 @@ export class GlobalExample extends React.Component {
                 <input id="global-switch" type="checkbox" className="switch is-large is-info"
                        checked={enabled || ''} onChange={this.handleChange}/>
                 <label htmlFor="global-switch">
-                    Flip this switch to {enabled ? 'disable' : 'enable'} global context menu.
+                    Flip this switch to {enabled ? 'disable' : 'enable'} the global context menu.
                 </label>
             </div>
         </div>;

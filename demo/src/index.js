@@ -12,10 +12,10 @@ window.changePageColour = event => {
 };
 
 import {GlobalExample} from './GlobalExample';
-render(<GlobalExample/>, document.querySelector('#global-example'));
+render(<GlobalExample/>, document.querySelector('#global-example-react'));
 import {LocalExample} from './LocalExample';
-render(<LocalExample/>, document.querySelector('#local-example'));
+render(<LocalExample/>, document.querySelector('#local-example-react'));
 import {SharedExample} from './SharedExample';
-render(<SharedExample/>, document.querySelector('#shared-example'));
+render(<SharedExample/>, document.querySelector('#shared-example-react'));
 import {NestedExample} from './NestedExample';
-render(<NestedExample/>, document.querySelector('#nested-example'));
+render(<NestedExample/>, document.querySelector('#nested-example-react'));

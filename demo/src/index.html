@@ -15,15 +15,26 @@
 <body>
     <div class="container">
         <h1 class="title is-2"><code>react-context-menu-wrapper</code> Demo</h1>
-        <p class="title is-4">
-            Check project's <a href="https://github.com/v1ndic4te/react-context-menu-wrapper">GitHub
-            page</a> for more info.
-        </p>
-
+        <br/>
+        <div class="content ">
+            <p class="is-size-5-desktop is-size-6-mobile">
+                Check project's <a href="https://github.com/v1ndic4te/react-context-menu-wrapper">GitHub
+                page</a> for more info.
+            </p>
+            <p class="is-size-5-desktop is-size-6-mobile">
+                <strong>Table of contents:</strong>
+            </p>
+            <ol class="is-size-5-desktop is-size-6-mobile" type="A">
+                <li><a href="#local-example">Component-local context menu</a></li>
+                <li><a href="#global-example">Global context menu</a></li>
+                <li><a href="#shared-example">Shared context menu</a></li>
+                <li><a href="#nested-example">Nested context menus</a></li>
+            </ol>
+        </div>
         <hr class="my-divider"/><!-------------------------------------------------->
 
-        <h3 class="title is-3 has-text-grey">Local context menu example</h3>
-        <p class="is-size-5">
+        <h3 id="local-example" class="title is-3 has-text-grey">Component-local context menu example</h3>
+        <p class="is-size-5-desktop is-size-6-mobile">
             Right click (or long press) on the green box below to open a component-local menu. This menu will only
             appear
             when you click inside the box, if you try to click outside it, a different menu will come up (see
@@ -36,7 +47,7 @@
             <br/>
         </p>
         <br/>
-        <div id="local-example"></div>
+        <div id="local-example-react"></div>
         <br/>
         <h4 class="title is-4 has-text-grey-light">Relevant code and CSS:</h4>
         <pre data-src="LocalExample.jsx"></pre>
@@ -44,42 +55,46 @@
 
         <hr class="my-divider"/><!-------------------------------------------------->
 
-        <h3 class="title is-3 has-text-grey">Global context menu example</h3>
-        <p class="is-size-5">
+        <h3 id="global-example" class="title is-3 has-text-grey">Global context menu example</h3>
+        <p class="is-size-5-desktop is-size-6-mobile">
             Right click (or long press on mobile) anywhere to open a global menu. This menu is styled using the
             <a href="https://bulma.io/">Bulma CSS framework</a> - you could also use Bootstrap, MaterializeCSS, or any
             other framework that provides styling for a dropdown component.
+            <br/>
+            <br/>
+            Note that after you flip the switch to disable the global context menu, you'll be able to use your
+            browser's native context menu.
         </p>
         <br/>
-        <div id="global-example"></div>
+        <div id="global-example-react"></div>
         <br/>
         <h4 class="title is-4 has-text-grey-light">Relevant code:</h4>
         <pre data-src="GlobalExample.jsx"></pre>
 
         <hr class="my-divider"/><!-------------------------------------------------->
 
-        <h3 class="title is-3 has-text-grey">Shared context menu example</h3>
-        <p class="is-size-5">
+        <h3 id="shared-example" class="title is-3 has-text-grey">Shared context menu example</h3>
+        <p class="is-size-5-desktop is-size-6-mobile">
             Right click (or long press on mobile) one of the boxes below. Note that although we only create one
             <code>ContextMenuWrapper</code> component, it can behave differently depending on what element we right
             click. Thanks to this feature, you can define a single context menu and reuse it in different places.
         </p>
         <br/>
-        <div id="shared-example"></div>
+        <div id="shared-example-react"></div>
         <br/>
         <h4 class="title is-4 has-text-grey-light">Relevant code:</h4>
         <pre data-src="SharedExample.jsx"></pre>
 
         <hr class="my-divider"/><!-------------------------------------------------->
 
-        <h3 class="title is-3 has-text-grey">Nested context menus example</h3>
-        <p class="is-size-5">
+        <h3 id="nested-example" class="title is-3 has-text-grey">Nested context menus example</h3>
+        <p class="is-size-5-desktop is-size-6-mobile">
             Click (or long press on mobile) on any of the nested boxes below. Note that we correctly show the context
             menu associated with the deepest component. This is a neat feature that is not always guaranteed by
             context menu packages.
         </p>
         <br/>
-        <div id="nested-example"></div>
+        <div id="nested-example-react"></div>
         <br/>
         <h4 class="title is-4 has-text-grey-light">Relevant code:</h4>
         <pre data-src="NestedExample.jsx"></pre>
