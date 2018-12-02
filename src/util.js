@@ -22,14 +22,14 @@ export const TriggerType = {
 };
 
 export const TriggerContext = {
-    Global: 'global', // When requested via a global listener
     Local: 'local', // When requested via a local listener
+    Global: 'global', // When requested via a global listener
+    Cancel: 'cancel', // When requested a cancel event is manually requested
 };
 
 export function getPropertySize(node, property) {
     try {
         const value = window.getComputedStyle(node).getPropertyValue(property);
-        console.log(`Prop ${property}: `, value);
         return +value.replace(/[^\d.]+/g, '');
     } catch (error) {
         // Bad property, object, doesn't matter.
@@ -94,6 +94,11 @@ const notifyIntentWinner = () => {
     store.intentWinner = null;
     if (!winner) return;
 
+    if (winner.eventDetails.triggerContext === TriggerContext.Cancel) {
+        // Current show intent is a cancel command, do nothing.
+        return;
+    }
+
     dispatchWindowEvent(EventName.DoShowContextMenu, winner);
 };
 
@@ -118,16 +123,20 @@ export function registerShowIntent(data) {
 
     if (store.intentWinner) {
         const ourDetails = data.eventDetails;
+        const otherDetails = store.intentWinner.eventDetails;
 
-        if (ourDetails.triggerType === TriggerType.Manual) {
-            // Do nothing because manually triggered requests alway take precedence.
+        if (otherDetails.triggerContext === TriggerContext.Cancel) {
+            // Do nothing because cancel commands always take precedence.
+        } else if (ourDetails.triggerType === TriggerType.Manual) {
+            // Do nothing because manual events always take precedence
+            // (unless the previous event is a manual cancel command.
         } else if (ourDetails.triggerContext === TriggerContext.Global) {
             // Either the existing trigger is also global (which means it will be identical to us) or it is local,
             // in which case we would lose. Either way, we can just return.
             return;
         } else {
             const ourSource = ourDetails.triggerSource;
-            const otherSource = store.intentWinner.eventDetails.triggerSource;
+            const otherSource = otherDetails.triggerSource;
 
             if (!ourSource || !otherSource) {
                 // If we got here, it means that we were triggered by a native event that didn't have proper targets
@@ -174,8 +183,8 @@ export const showContextMenu = (data) => {
         preventDefault: () => event.preventDefault(),
         triggerSource: null,
         triggerTarget: null,
-        x: event.clientX,
-        y: event.clientY,
+        x: 0,
+        y: 0,
     };
     if (data.event) {
         eventDetails.triggerSource = event.currentTarget;
@@ -191,6 +200,14 @@ export const showContextMenu = (data) => {
 export function hideAllContextMenus() {
     dispatchWindowEvent(EventName.HideAllContextMenus);
 }
+
+export const cancelOtherContextMenus = event => {
+    const eventDetails = {
+        triggerType: TriggerType.Manual,
+        triggerContext: TriggerContext.Cancel,
+    };
+    registerShowIntent({eventDetails});
+};
 
 /**
  * Prepares an object with handlers for different events

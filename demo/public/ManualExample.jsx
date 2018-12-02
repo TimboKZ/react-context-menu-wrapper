@@ -1,5 +1,5 @@
 const React = require('react');
-import {showContextMenu, hideAllContextMenus} from 'react-context-menu-wrapper';
+import {showContextMenu, hideAllContextMenus, cancelOtherContextMenus} from 'react-context-menu-wrapper';
 
 const style = {backgroundColor: '#a3eee3', color: '#007d6a'};
 const boxes = [
@@ -38,7 +38,9 @@ export class ManualExample extends React.Component {
             const name = box[0];
             const id = box[1];
             comps[i] = <div key={name} className="column">
-                <div className="my-box" style={style} onClick={event => this.handleBoxClick(id, event)}>
+                <div className="button is-primary is-large is-fullwidth"
+                     onClick={event => this.handleBoxClick(id, event)}
+                     onContextMenu={cancelOtherContextMenus}>
                     {this.state.text[name]}
                 </div>
             </div>;
@@ -50,3 +52,4 @@ export class ManualExample extends React.Component {
         return (<div className="columns">{this.renderBoxes()}</div>);
     }
 }
+

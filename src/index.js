@@ -10,4 +10,9 @@ if (!windowExists()) throw new Error('\'window\' is not available! Are we runnin
 initWindowState();
 
 export {default as ContextMenuWrapper} from './ContextMenuWrapper';
-export {showContextMenu, hideAllContextMenus, prepareContextMenuHandlers} from './util';
+export {
+    showContextMenu,
+    hideAllContextMenus,
+    cancelOtherContextMenus,
+    prepareContextMenuHandlers,
+} from './util';
