@@ -29,14 +29,58 @@ Features:
 # Installation
 
 Install the main package:
-```
+```bash
 npm install --save react-context-menu-wrapper
 ```
 
 # The gist
 
-```
-// Coming.
+```jsx
+// Import our packages, the usual way.
+import React, {Component} from 'react';
+import {ContextMenuWrapper, prepareContextMenuHandlers} from 'react-context-menu-wrapper';
+
+// Define some styles - remember that `react-context-menu-wrapper` does not provide any styling out of the box.
+const contextMenuStyle = {backgroundColor: '#eec185', padding: '10px', boxShadow: '0 3px 5px rgba(0, 0, 0, 0.5)'};
+const blueBoxStyle = {backgroundColor: '#3e48f9', color: '#fff', padding: '40px'};
+const redBoxStyle = {backgroundColor: '#aa2d35', color: '#fff', padding: '40px'};
+
+class ComponentWithAContextMenu extends Component {
+    constructor(props) {
+        super(props);
+
+        // Set initial phase to same dummy value.
+        this.state = {phrase: 'Nothing.'};
+
+        // Create "triggers" for our context menu. Each "trigger" has some unique data associated with it.
+        this.redBoxHandlers = prepareContextMenuHandlers('my-context-menu', 'Hello from Lavagirl!');
+        this.blueBoxHandlers = prepareContextMenuHandlers('my-context-menu', 'Hello from Sharkboy!');
+    }
+
+    // Define our logic for when the context menu is shown
+    handleContextMenuShow = data => {
+        // 'data' variable contains the phrase we initialised our handlers with.
+        this.setState({phrase: data});
+    };
+
+    render() {
+        return (
+            <div style={{fontSize: '1.4rem'}}>
+                {/* Render the boxes that will trigger the context menu */}
+                <div {...this.blueBoxHandlers} style={blueBoxStyle}>Blue box</div>
+                <div {...this.redBoxHandlers} style={redBoxStyle}>Red box</div>
+
+                {/* Include the component for the context menu itself. Note that this component doesn't have to be on
+                the same level as triggers. In fact, the context menu can even be render in a separate React tree! */}
+                <ContextMenuWrapper id="my-context-menu" onShow={this.handleContextMenuShow}>
+                    <div style={contextMenuStyle}>
+                        <div>The box says: <strong>{this.state.phrase}</strong></div>
+                    </div>
+                </ContextMenuWrapper>
+            </div>
+        );
+    }
+}
 ```
 
 # Example with custom styling
