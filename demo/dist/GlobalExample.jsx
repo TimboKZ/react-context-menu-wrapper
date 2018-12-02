@@ -45,4 +45,4 @@ export class GlobalExample extends React.Component {
             </div>
         </div>;
     }
-}
+};

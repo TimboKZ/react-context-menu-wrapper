@@ -1,11 +1,5 @@
-/**
- * @author v1ndic4te
- * @copyright 2018
- * @licence GPL-3.0
- */
-
 const React = require('react');
-import {ContextMenuWrapper, prepareContextMenuHandlers} from '../../src';
+import {ContextMenuWrapper, prepareContextMenuHandlers} from 'react-context-menu-wrapper';
 
 const boxes = [
     ['Geralt', {backgroundColor: '#ffcccc', color: '#4c1422'}],
@@ -28,7 +22,7 @@ export class NestedExample extends React.Component {
             <ContextMenuWrapper id={name}>
                 <div className="dropdown is-active">
                     <div className="dropdown-menu">
-                        <div className="dropdown-content" style={{backgroundColor: style.backgroundColor}}>
+                        <div className="dropdown-content" style={{backgroundColor: '#ffe5ea'}}>
                             <div className="dropdown-item">
                                 This menu belongs to <strong>{name}</strong>!
                             </div>

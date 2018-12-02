@@ -52,7 +52,7 @@ export class SharedExample extends React.Component {
                         <div className="dropdown-menu">
                             <div className="dropdown-content" style={{backgroundColor: '#ffe5ea'}}>
                                 <div className="dropdown-item">
-                                    This menu belongs to {this.state.owner}!
+                                    This menu belongs to <strong>{this.state.owner}</strong>!
                                 </div>
                                 <hr className="dropdown-divider"/>
                                 <a href="#" className="dropdown-item" onClick={this.toggleCurrentOwnerState}>
