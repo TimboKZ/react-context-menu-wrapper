@@ -183,18 +183,13 @@ export const prepareContextMenuHandlers = (externalId, data = null) => {
 };
 
 function globalContextMenuListener(event) {
-    const showIntent = {
-        internalId: null,
-        externalId: null,
-        eventDetails: {
-            triggerType: TriggerType.Global,
-            preventDefault: () => event.preventDefault(),
-            triggerSource: event.currentTarget,
-            triggerTarget: event.target,
-            x: event.clientX,
-            y: event.clientY,
-        },
-        data: null, // TODO: Add a way to pass global data? Probably not, people can just use state for that.
+    const eventDetails = {
+        triggerType: TriggerType.Global,
+        preventDefault: () => event.preventDefault(),
+        triggerSource: event.currentTarget,
+        triggerTarget: event.target,
+        x: event.clientX,
+        y: event.clientY,
     };
-    registerShowIntent(showIntent);
+    dispatchWindowEvent(EventName.TryShowContextMenu, {eventDetails, externalId: null, data: null});
 }

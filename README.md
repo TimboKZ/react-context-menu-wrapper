@@ -1,9 +1,7 @@
 # React context menu wrapper
 
-[![Travis][build-badge]][build]
 [![react-context-menu-wrapper version][npm-version]][npm]
 [![react-context-menu-wrapper downloads][npm-downloads]][npm]
-[![Coveralls][coveralls-badge]][coveralls]
 
 This component provides a simple wrapper for your context menu content. It will handle the right click (or long 
 press on mobile) event and menu positioning, but the rest is up to you.
@@ -35,7 +33,7 @@ npm install --save react-context-menu-wrapper
 
 # The gist
 
-Here's a short example of a simple context menu. It doesn't showcase many features, but it should give you a basic 
+Here's an example of a simple context menu. It doesn't showcase many features, but it should give you a basic 
 idea of how this component works.
 
 ![Gif of the context menu library in action.](./demo/public/context-menu-boxes.gif)
@@ -45,7 +43,7 @@ idea of how this component works.
 import React, {Component} from 'react';
 import {ContextMenuWrapper, prepareContextMenuHandlers} from 'react-context-menu-wrapper';
 
-// Define some styles - remember that `react-context-menu-wrapper` does not provide any styling out of the box.
+// Define some styles - remember that `react-context-menu-wrapper` does not provide any styling out-of-the-box.
 const contextMenuStyle = {backgroundColor: '#eec185', padding: '10px', boxShadow: '0 3px 5px rgba(0, 0, 0, 0.5)'};
 const blueBoxStyle = {backgroundColor: '#3e48f9', color: '#fff', padding: '40px'};
 const redBoxStyle = {backgroundColor: '#aa2d35', color: '#fff', padding: '40px'};
@@ -77,7 +75,7 @@ class ComponentWithAContextMenu extends Component {
 
                 {/*
                 Include the component for the context menu itself. Note that this component doesn't have to be on
-                the same level as triggers. In fact, the context menu can even be render in a separate React tree!
+                the same level as triggers. In fact, the context menu can even come from a different React tree!
                 */}
                 <ContextMenuWrapper id="my-context-menu" onShow={this.handleContextMenuShow}>
                     <div style={contextMenuStyle}>

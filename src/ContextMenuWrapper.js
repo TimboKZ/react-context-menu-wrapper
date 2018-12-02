@@ -68,7 +68,7 @@ export default class ContextMenuWrapper extends Component {
         this.toggleProps = [
             // Property, Target, Event, Handler
             [null, window, EventName.HideAllContextMenus, this.hide],
-            ['id', window, EventName.TryShowContextMenu, this.handleShowRequest],
+            [null, window, EventName.TryShowContextMenu, this.handleShowRequest],
             ['hideOnScroll', document, 'scroll', this.hide],
             ['hideOnWindowResize', window, 'resize', this.hide],
         ];
@@ -145,27 +145,26 @@ export default class ContextMenuWrapper extends Component {
 
     handleShowRequest = (event) => {
         const detail = event.detail;
-        if (detail && detail.externalId) {
-            // Was triggered by a remote event.
-            const ourId = this.props.id;
-            const requestId = detail.externalId;
+        const ourExternalId = this.props.id;
+        const requestExternalId = detail.externalId;
+        const eventDetails = detail.eventDetails;
 
-            // Do nothing if ID does not match ours
-            if (!ourId || ourId !== requestId) return;
+        if (
+            // Does not match our ID
+            !(ourExternalId && ourExternalId === requestExternalId)
+            // AND doesn't trigger us globally
+            && !(this.props.global && eventDetails.triggerType === TriggerType.Global)
+        ) return;
 
-            // ...otherwise process this event as-if it was meant for us (but we're not sure yet, there may be other
-            // handlers that have precedence over us.
-            const eventDetails = detail.eventDetails;
-            const showIntent = {
-                internalId: this.internalId,
-                externalId: ourId,
-                eventDetails,
-                data: detail.data,
-            };
-            registerShowIntent(showIntent);
-        } else {
-            // TODO: Malformed event, nothing we can really do. Perhaps show a warning?
-        }
+        // ...otherwise process this event as-if it was meant for us (but we're not sure yet, there may be other
+        // handlers that have precedence over us.
+        const showIntent = {
+            internalId: this.internalId,
+            externalId: ourExternalId,
+            eventDetails,
+            data: detail.data,
+        };
+        registerShowIntent(showIntent);
     };
 
     handleClick = (event) => {
