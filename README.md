@@ -96,9 +96,40 @@ class ComponentWithAContextMenu extends Component {
 ```
 
 # `ContextMenuWrapper` component
+
+`ContextMenuWrapper` is the component that handles showing and hiding your context menu content on various events, 
+which are triggered either programmatically or through user input. This is the only React component provided by the 
+library, the rest of the functionality is provided as helper functions.
+
+Example usage:
+```jsx
+import {ContextMenuWrapper} from 'react-context-menu-wrapper';
+
+const MyComponent = () => (
+    <ContextMenuWrapper global={true}
+                        onShow={() => console.log('Context menu shown!')}
+                        onHidden={() => console.log('Context menu shown!')}>
+        <div style={{backgroundColor: 'black', color: 'white'}}>This is a context menu.</div>
+    </ContextMenuWrapper>
+);
 ```
-// Coming.
-```
+
+Properties supported by `ContextMenuWrapper`:
+
+| Name                 | Type                    | Default value | Description                                                                                                                                                                                    |
+|----------------------|-------------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id`                 | String                  | *None*        | A user-defined string that is used to reference this context menu component in helper functions. For example: `file-entry-menu`.                                                               |
+| `global`             | Boolean                 | `false`       | Determines whether the context menu can be opened by right clicking (or long pressing on mobile) anywhere on the page. Note that a context menu can have an ID and be global at the same time. |
+| `onShow`             | *ContextMenuCallback* | *None*        | A callback that is called right before this context menu is shown. See below for more details.                                                                                                 |
+| `onHide`             | *ContextMenuCallback* | *None*        | A callback that is called immediately after this context menu is hidden. See below for more details.                                                                                           |
+| `hideOnScroll`       | Boolean                 | `true`        | Determines whether the menu should disappear when *document* (top level node) is scrolled.                                                                                                     |
+| `hideOnWindowResize` | Boolean                 | `true`        | Determines whether the menu should disappear when the window is resized.                                                                                                                       |
+| `hideOnSelfClick`    | Boolean                 | `true`        | Determines whether the context menu should disappear after something inside it was clicked.                                                                                                    |
+| `hideOnOutsideClick` | Boolean                 | `true`        | Determines whether the context menu should disappear after the user has clicked anything outside of it.                                                                                        |
+
+`ContextMenuCallback` is a function of type `(data, publicProps) => void`. `data` is the value that was passed to the
+ handlers of the context menu, if any (see `prepareContextMenuHandlers(...)` below). `publicProps` is an object 
+ containing the values of the properties listed above.
 
 # Helper functions
 ```
