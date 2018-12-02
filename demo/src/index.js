@@ -1,7 +1,5 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {render} from 'react-dom';
-
-import {ContextMenuWrapper} from '../../src';
 
 // Setup a function to change the background colour of the page
 const body = document.querySelector('body');
@@ -14,5 +12,8 @@ window.changePageColour = event => {
 };
 
 import {GlobalExample} from './GlobalExample';
-
 render(<GlobalExample/>, document.querySelector('#global-example'));
+import {LocalExample} from './LocalExample';
+render(<LocalExample/>, document.querySelector('#local-example'));
+import {SharedExample} from './SharedExample';
+render(<SharedExample/>, document.querySelector('#shared-example'));

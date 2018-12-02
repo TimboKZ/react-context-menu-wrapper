@@ -12,16 +12,24 @@ have to style the context menu yourself. This is useful when your CSS framework 
 dropdowns [from Bootstrap](https://getbootstrap.com/docs/4.1/components/dropdowns/) or
 [from Bulma](https://bulma.io/documentation/components/dropdown/).
 
+Features:
+* Supports global and component-local context menus.
+* Supports long-press for mobile devices.
+* **Does not provide out-of-the-box styling.**
+
+> Please [create an issue](https://github.com/v1ndic4te/react-context-menu-wrapper/issues/new) if you find a bug or
+> want to suggest a new feature.
+
+# Demo
+
+[Click here to view some demos.](https://v1ndic4te.github.io/react-context-menu-wrapper/)
+
 # Installation
 
 Install the main package:
 ```
 npm install --save react-context-menu-wrapper
 ```
-
-# Demo
-
-[Click here](https://v1ndic4te.github.io/react-context-menu-wrapper/) to see a demo page. The source code of that page can be found in the `index.html` file.
 
 # The gist
 

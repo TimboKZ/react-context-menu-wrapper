@@ -1,0 +1,27 @@
+.my-context-box {
+    text-align: center;
+    font-size: 1.4rem;
+    display: block;
+    padding: 2rem;
+}
+.my-dropdown {
+    background-color: #def9f5;
+    border: solid 1px #ccc;
+    border-radius: 4px;
+    max-width: 280px;
+}
+.my-item {
+    display: block;
+    padding: 10px;
+}
+.my-button {
+    font-weight: bold;
+}
+.my-button:hover {
+    background-color: rgba(112, 160, 207, 0.25);
+}
+.my-separator {
+    background-color: #ccc !important;
+    height: 1px !important;
+    margin: 0 !important;
+}

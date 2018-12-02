@@ -10,4 +10,4 @@ if (!windowExists()) throw new Error('\'window\' is not available! Are we runnin
 prepareDataStorage();
 
 export {default as ContextMenuWrapper} from './ContextMenuWrapper';
-export {showContextMenu, hideAllContextMenus} from './util';
+export {showContextMenu, hideAllContextMenus, prepareContextMenuHandlers} from './util';

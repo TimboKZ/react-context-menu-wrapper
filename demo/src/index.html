@@ -6,8 +6,11 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title><%= htmlWebpackPlugin.options.title %></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bulma-extensions@4.0.0/bulma-switch/dist/css/bulma-switch.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism.min.css"/>
     <link rel="stylesheet" href="index.css"/>
+    <link rel="stylesheet" href="local-menu.css"/>
 </head>
 <body>
     <div class="container">
@@ -17,14 +20,56 @@
             page</a> for more info.
         </p>
 
-        <hr class="my-divider"/>
+        <hr class="my-divider"/><!-------------------------------------------------->
 
-        <h3 class="title is-3 has-text-grey-light">Global context menu example</h3>
-        <h4 class="title is-4">Click anywhere to open a global menu.</h4>
+        <h3 class="title is-3 has-text-grey">Local context menu example</h3>
+        <p class="is-size-5">
+            Right click (or long press) on the green box below to open a component-local menu. This menu will only
+            appear
+            when you click inside the box, if you try to click outside it, a different menu will come up (see
+            next section). The content of the local menu is composed of custom elements with custom styles, none of
+            which are included in the <code>react-context-menu-wrapper</code> package. This approach makes the process
+            of designing context menus much more flexible.
+            <br/>
+            <br/>
+            Note that, by default, this menu will disappear the moment you click something in it.
+            <br/>
+        </p>
+        <br/>
+        <div id="local-example"></div>
+        <br/>
+        <h4 class="title is-4 has-text-grey-light">Relevant code and CSS:</h4>
+        <pre data-src="LocalExample.jsx"></pre>
+        <pre data-src="local-menu.css"></pre>
+
+        <hr class="my-divider"/><!-------------------------------------------------->
+
+        <h3 class="title is-3 has-text-grey">Global context menu example</h3>
+        <p class="is-size-5">
+            Right click (or long press on mobile) anywhere to open a global menu. This menu is styled using the
+            <a href="https://bulma.io/">Bulma CSS framework</a> - you could also use Bootstrap, MaterializeCSS, or any
+            other framework that provides styling for a dropdown component.
+        </p>
+        <br/>
         <div id="global-example"></div>
-        <pre data-src="GlobalExample.jsx"/>
-        Click on the green box below to open a context menu styled using Bulma.
-        Click on the green box below to open a context menu styled using React.
+        <br/>
+        <h4 class="title is-4 has-text-grey-light">Relevant code:</h4>
+        <pre data-src="GlobalExample.jsx"></pre>
+
+        <hr class="my-divider"/><!-------------------------------------------------->
+
+        <h3 class="title is-3 has-text-grey">Shared context menu example</h3>
+        <p class="is-size-5">
+            Right click (or long press on mobile) one of the boxes below. Note that although we only create one
+            <code>ContextMenuWrapper</code> component, it can behave differently depending on what element we right
+            click. Thanks to this feature, you can define a single context menu and reuse it in different places.
+        </p>
+        <br/>
+        <div id="shared-example"></div>
+        <br/>
+        <h4 class="title is-4 has-text-grey-light">Relevant code:</h4>
+        <pre data-src="SharedExample.jsx"></pre>
+
         <div id="<%= htmlWebpackPlugin.options.mountId %>"></div>
         <br/>
     </div>
