@@ -35,6 +35,11 @@ npm install --save react-context-menu-wrapper
 
 # The gist
 
+Here's a short example of a simple context menu. It doesn't showcase many features, but it should give you a basic 
+idea of how this component works.
+
+![Gif of the context menu library in action.](./demo/public/context-menu-boxes.gif)
+
 ```jsx
 // Import our packages, the usual way.
 import React, {Component} from 'react';
@@ -70,8 +75,10 @@ class ComponentWithAContextMenu extends Component {
                 <div {...this.blueBoxHandlers} style={blueBoxStyle}>Blue box</div>
                 <div {...this.redBoxHandlers} style={redBoxStyle}>Red box</div>
 
-                {/* Include the component for the context menu itself. Note that this component doesn't have to be on
-                the same level as triggers. In fact, the context menu can even be render in a separate React tree! */}
+                {/*
+                Include the component for the context menu itself. Note that this component doesn't have to be on
+                the same level as triggers. In fact, the context menu can even be render in a separate React tree!
+                */}
                 <ContextMenuWrapper id="my-context-menu" onShow={this.handleContextMenuShow}>
                     <div style={contextMenuStyle}>
                         <div>The box says: <strong>{this.state.phrase}</strong></div>
