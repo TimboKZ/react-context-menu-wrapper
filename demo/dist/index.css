@@ -94,3 +94,7 @@ pre .tag, pre .number {
     margin: inherit;
 }
 
+.dropdown-menu {
+    padding: 0;
+}
+

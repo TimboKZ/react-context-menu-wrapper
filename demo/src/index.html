@@ -29,6 +29,7 @@
                 <li><a href="#global-example">Global context menu</a></li>
                 <li><a href="#shared-example">Shared context menu</a></li>
                 <li><a href="#nested-example">Nested context menus</a></li>
+                <li><a href="#manual-example">Showing and hiding context menus programmatically</a></li>
             </ol>
         </div>
         <hr class="my-divider"/><!-------------------------------------------------->
@@ -36,8 +37,7 @@
         <h3 id="local-example" class="title is-3 has-text-grey">Component-local context menu example</h3>
         <p class="is-size-5-desktop is-size-6-mobile">
             Right click (or long press) on the green box below to open a component-local menu. This menu will only
-            appear
-            when you click inside the box, if you try to click outside it, a different menu will come up (see
+            appear when you click inside the box, if you try to click outside it, a different menu will come up (see
             next section). The content of the local menu is composed of custom elements with custom styles, none of
             which are included in the <code>react-context-menu-wrapper</code> package. This approach makes the process
             of designing context menus much more flexible.
@@ -89,8 +89,8 @@
 
         <h3 id="nested-example" class="title is-3 has-text-grey">Nested context menus example</h3>
         <p class="is-size-5-desktop is-size-6-mobile">
-            Click (or long press on mobile) on any of the nested boxes below. Note that we correctly show the context
-            menu associated with the deepest component. This is a neat feature that is not always guaranteed by
+            Right click (or long press on mobile) on any of the nested boxes below. Note that we correctly show the
+            context menu associated with the deepest component. This is a neat feature that is not always guaranteed by
             context menu packages.
         </p>
         <br/>
@@ -99,8 +99,22 @@
         <h4 class="title is-4 has-text-grey-light">Relevant code:</h4>
         <pre data-src="NestedExample.jsx"></pre>
 
-        <div id="<%= htmlWebpackPlugin.options.mountId %>"></div>
+        <hr class="my-divider"/><!-------------------------------------------------->
+
+        <h3 id="manual-example" class="title is-3 has-text-grey">
+            Showing and hiding context menus programmatically
+        </h3>
+        <p class="is-size-5-desktop is-size-6-mobile">
+            <strong>Left</strong> click on one of the boxes below. Depending on which box you click, we will show
+            one of the menus from the previous examples. We will also hide it after 2 seconds.
+        </p>
         <br/>
+        <div id="manual-example-react"></div>
+        <br/>
+        <h4 class="title is-4 has-text-grey-light">Relevant code:</h4>
+        <pre data-src="ManualExample.jsx"></pre>
+
+        <div id="<%= htmlWebpackPlugin.options.mountId %>"></div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/plugins/file-highlight/prism-file-highlight.min.js"></script>

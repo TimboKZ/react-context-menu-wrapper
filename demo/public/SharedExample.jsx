@@ -25,7 +25,7 @@ export class SharedExample extends React.Component {
     };
 
     handleContextMenuShow = data => {
-        this.setState({owner: data});
+        this.setState({owner: data ? data : 'no one'});
     };
 
     renderBoxes() {
@@ -66,4 +66,4 @@ export class SharedExample extends React.Component {
             </div>
         );
     }
-};
+}

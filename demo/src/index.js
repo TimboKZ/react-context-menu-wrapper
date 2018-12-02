@@ -19,3 +19,5 @@ import {SharedExample} from './SharedExample';
 render(<SharedExample/>, document.querySelector('#shared-example-react'));
 import {NestedExample} from './NestedExample';
 render(<NestedExample/>, document.querySelector('#nested-example-react'));
+import {ManualExample} from './ManualExample';
+render(<ManualExample/>, document.querySelector('#manual-example-react'));

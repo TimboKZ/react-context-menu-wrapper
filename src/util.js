@@ -18,9 +18,24 @@ export const EventName = {
 
 export const TriggerType = {
     Manual: 'manual', // When context menu is requested programmatically
+    Native: 'native', // When context menu is requested via an input event
+};
+
+export const TriggerContext = {
     Global: 'global', // When requested via a global listener
     Local: 'local', // When requested via a local listener
 };
+
+export function getPropertySize(node, property) {
+    try {
+        const value = window.getComputedStyle(node).getPropertyValue(property);
+        console.log(`Prop ${property}: `, value);
+        return +value.replace(/[^\d.]+/g, '');
+    } catch (error) {
+        // Bad property, object, doesn't matter.
+        return 0;
+    }
+}
 
 export function windowExists() {
     return typeof window !== 'undefined';
@@ -103,19 +118,29 @@ export function registerShowIntent(data) {
 
     if (store.intentWinner) {
         const ourDetails = data.eventDetails;
-        if (ourDetails.triggerType === TriggerType.Global) {
+
+        if (ourDetails.triggerType === TriggerType.Manual) {
+            // Do nothing because manually triggered requests alway take precedence.
+        } else if (ourDetails.triggerContext === TriggerContext.Global) {
             // Either the existing trigger is also global (which means it will be identical to us) or it is local,
             // in which case we would lose. Either way, we can just return.
             return;
+        } else {
+            const ourSource = ourDetails.triggerSource;
+            const otherSource = store.intentWinner.eventDetails.triggerSource;
+
+            if (!ourSource || !otherSource) {
+                // If we got here, it means that we were triggered by a native event that didn't have proper targets
+                // specified. The only thing we can do is just give up and assume the current intent lost.
+                return;
+            }
+
+            // If we have higher precedence than our opponent, we win the intent.
+            if (ourSource.contains(otherSource)) {
+                return;
+            }
         }
 
-        const ourSource = ourDetails.triggerSource;
-        const otherSource = store.intentWinner.eventDetails.triggerSource;
-
-        // If we have high precedence than our opponent, we win the intent.
-        if (ourSource.contains(otherSource)) {
-            return;
-        }
         // TODO: Handle the weird case when none of the sources contain the other.
     }
 
@@ -134,32 +159,38 @@ export function getLastTriggerData(internalId) {
     return map[internalId];
 }
 
-export function getPropertySize(node, property) {
-    const value = window.getComputedStyle(node).getPropertyValue(property);
-    return +value.replace(/[^\d.]+/g, '');
-}
-
-export function hideAllContextMenus() {
-    dispatchWindowEvent(EventName.HideAllContextMenus);
-}
-
 /**
  * @param {object} data
- * @param {string} data.id      External ID of the context menu
- * @param {object} data.data    Data associated with the event
- * @param {Event} [data.event]  ContextMenu event that triggered the logic
+ * @param {string} [data.id]    External ID of the context menu
+ * @param {object} [data.data]  Data associated with the event
+ * @param {*} [data.event]      ContextMenu event that triggered the logic
+ * @param {*} [data.x]          x-coordinate to show the menu at
+ * @param {*} [data.y]          y-coordinate to show the menu at
  */
 export const showContextMenu = (data) => {
     const eventDetails = {
         triggerType: TriggerType.Manual,
+        triggerContext: data.id ? TriggerContext.Local : TriggerContext.Global,
         preventDefault: () => event.preventDefault(),
-        triggerSource: event.currentTarget,
-        triggerTarget: event.target,
+        triggerSource: null,
+        triggerTarget: null,
         x: event.clientX,
         y: event.clientY,
     };
+    if (data.event) {
+        eventDetails.triggerSource = event.currentTarget;
+        eventDetails.triggerTarget = event.target;
+        eventDetails.x = event.clientX;
+        eventDetails.y = event.clientY;
+    }
+    if (data.x) eventDetails.x = data.x;
+    if (data.y) eventDetails.y = data.y;
     dispatchWindowEvent(EventName.TryShowContextMenu, {eventDetails, externalId: data.id, data: data.data});
 };
+
+export function hideAllContextMenus() {
+    dispatchWindowEvent(EventName.HideAllContextMenus);
+}
 
 /**
  * Prepares an object with handlers for different events
@@ -170,7 +201,8 @@ export const prepareContextMenuHandlers = (externalId, data = null) => {
     return {
         onContextMenu: event => {
             const eventDetails = {
-                triggerType: TriggerType.Local,
+                triggerType: TriggerType.Native,
+                triggerContext: TriggerContext.Local,
                 preventDefault: () => event.preventDefault(),
                 triggerSource: event.currentTarget,
                 triggerTarget: event.target,
@@ -184,7 +216,8 @@ export const prepareContextMenuHandlers = (externalId, data = null) => {
 
 function globalContextMenuListener(event) {
     const eventDetails = {
-        triggerType: TriggerType.Global,
+        triggerType: TriggerType.Native,
+        triggerContext: TriggerContext.Global,
         preventDefault: () => event.preventDefault(),
         triggerSource: event.currentTarget,
         triggerTarget: event.target,

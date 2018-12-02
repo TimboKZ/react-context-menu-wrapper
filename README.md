@@ -1,4 +1,4 @@
-# React context menu wrapper
+# React Context Menu Wrapper
 
 [![react-context-menu-wrapper version][npm-version]][npm]
 [![react-context-menu-wrapper downloads][npm-downloads]][npm]
@@ -15,7 +15,9 @@ dropdowns [from Bootstrap](https://getbootstrap.com/docs/4.1/components/dropdown
 * Supports global and component-local context menus.
 * Supports long-press for mobile devices.
 * Lets you trigger context menus programmatically.  
+* Lets you define context menu precedence.
 * Correctly displays context menus on nested components.
+* Correctly displays context menus near the borders of the window.
 * **Does not provide out-of-the-box styling.**
 
 > Please [create an issue](https://github.com/v1ndic4te/react-context-menu-wrapper/issues/new) if you find a bug or
@@ -36,10 +38,12 @@ npm install --save react-context-menu-wrapper
 
 Here's an example of a simple context menu. It doesn't showcase many features, but it should give you a basic 
 idea of how this component works. This particular context menu doesn't have any buttons - don't worry, it's pretty easy 
-to add them. Take a look at [demos and exmaples](https://v1ndic4te.github.io/react-context-menu-wrapper/) to find out
+to add them. Take a look at [demos and examples](https://v1ndic4te.github.io/react-context-menu-wrapper/) to find out
  more.
 
 ![Gif of the context menu library in action.](https://v1ndic4te.github.io/react-context-menu-wrapper/context-menu-boxes.gif)
+
+(The context menu in the gif is triggered using a right click and dismissed using a left click.)
 
 ```jsx
 // Import our packages, the usual way.

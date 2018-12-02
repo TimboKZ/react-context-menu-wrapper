@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import {
     warn,
     EventName,
-    TriggerType,
+    TriggerContext,
     generateInternalId,
     registerGlobalContextMenu,
     removeGlobalContextMenu,
@@ -26,6 +26,7 @@ export default class ContextMenuWrapper extends Component {
     static propTypes = {
         id: PropTypes.string,
         onShow: PropTypes.func,
+        onHide: PropTypes.func,
 
         hideOnSelfClick: PropTypes.bool,
         hideOnOutsideClick: PropTypes.bool,
@@ -39,6 +40,7 @@ export default class ContextMenuWrapper extends Component {
     static defaultProps = {
         id: null,
         onShow: null,
+        onHide: null,
 
         hideOnSelfClick: true,
         hideOnOutsideClick: true,
@@ -136,7 +138,7 @@ export default class ContextMenuWrapper extends Component {
             // Does not match our ID
             !(showIntent.internalId && showIntent.internalId === this.internalId)
             // AND doesn't trigger us globally
-            && !(this.props.global && showIntent.eventDetails.triggerType === TriggerType.Global)
+            && !(this.props.global && showIntent.eventDetails.triggerContext === TriggerContext.Global)
         ) return;
 
         setLastTriggerData(this.internalId, showIntent.data);
@@ -153,7 +155,7 @@ export default class ContextMenuWrapper extends Component {
             // Does not match our ID
             !(ourExternalId && ourExternalId === requestExternalId)
             // AND doesn't trigger us globally
-            && !(this.props.global && eventDetails.triggerType === TriggerType.Global)
+            && !(this.props.global && eventDetails.triggerContext === TriggerContext.Global)
         ) return;
 
         // ...otherwise process this event as-if it was meant for us (but we're not sure yet, there may be other
@@ -177,19 +179,41 @@ export default class ContextMenuWrapper extends Component {
         else if (this.props.hideOnSelfClick) return this.hide();
     };
 
+    /**
+     * @returns {object}
+     */
+    getPublicProps() {
+        const publicPropNames = Object.keys(ContextMenuWrapper.propTypes);
+        const publicProps = {};
+        for (const propName of publicPropNames) {
+            publicProps[propName] = this.props[propName];
+        }
+        return publicProps;
+    }
+
     show = showIntent => {
+        if (this.props.onShow) this.props.onShow(getLastTriggerData(this.internalId), this.getPublicProps());
+        hideAllContextMenus();
+        this.setState({visible: true});
+
         const clickX = showIntent.eventDetails.x;
         const clickY = showIntent.eventDetails.y;
         const screenW = window.innerWidth;
         const screenH = window.innerHeight;
 
-        let rootW = 100;
-        let rootH = 50;
-        const domNode = this.nodeRef.current;
+        let rootW;
+        let rootH;
+        let domNode = this.nodeRef.current;
         if (domNode) {
-            rootW = getPropertySize(domNode, 'width');
-            rootH = getPropertySize(domNode, 'height');
+            do {
+                if (!domNode) break;
+                rootW = getPropertySize(domNode, 'width');
+                rootH = getPropertySize(domNode, 'height');
+                domNode = domNode.firstChild;
+            } while (rootW < 1 || rootH < 1);
         }
+        if (rootW < 1) rootW = 80;
+        if (rootH < 1) rootH = 160;
 
         const right = (screenW - clickX) > rootW;
         const left = !right;
@@ -202,8 +226,7 @@ export default class ContextMenuWrapper extends Component {
         if (top) style.top = `${clickY + 5}px`;
         if (bottom) style.top = `${clickY - rootH - 5}px`;
 
-        hideAllContextMenus();
-        if (this.props.onShow) this.props.onShow(getLastTriggerData(this.internalId));
+        // TODO: Create a global event that notifies remote listeners about show/hide
         this.setState({
             visible: true,
             style: {
@@ -214,7 +237,10 @@ export default class ContextMenuWrapper extends Component {
     };
 
     hide = () => {
-        if (this.state.visible) this.setState({visible: false});
+        if (this.state.visible) {
+            this.setState({visible: false});
+            if (this.props.onHide) this.props.onHide(getLastTriggerData(this.internalId), this.getPublicProps());
+        }
     };
 
     render() {
