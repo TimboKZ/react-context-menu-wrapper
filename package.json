@@ -1,6 +1,6 @@
 {
   "name": "react-context-menu-wrapper",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "react-context-menu-wrapper React component",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -40,6 +40,12 @@
   "homepage": "https://github.com/v1ndic4te/react-context-menu-wrapper#readme",
   "repository": "",
   "keywords": [
+    "react",
+    "context-menu",
+    "context-menu-react",
+    "context-menu-component",
+    "event-handler",
+    "menu",
     "react-component"
   ]
 }

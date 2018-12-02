@@ -1,7 +1,8 @@
 # React context menu wrapper
 
 [![Travis][build-badge]][build]
-[![npm package][npm-badge]][npm]
+[![react-context-menu-wrapper version][npm-version]][npm]
+[![react-context-menu-wrapper downloads][npm-downloads]][npm]
 [![Coveralls][coveralls-badge]][coveralls]
 
 This component provides a simple wrapper for your context menu content. It will handle the right click event and menu 
@@ -51,11 +52,12 @@ npm install --save react-context-menu-wrapper
 # Bulma example
 
 
-[build-badge]: https://img.shields.io/travis/user/repo/master.png?style=flat-square
-[build]: https://travis-ci.org/user/repo
+[build-badge]: https://img.shields.io/travis/v1ndic4te/react-context-menu-wrapper/master.png?style=flat-square
+[build]: https://travis-ci.org/v1ndic4te/react-context-menu-wrapper
 
-[npm-badge]: https://img.shields.io/npm/v/npm-package.png?style=flat
-[npm]: https://www.npmjs.org/package/npm-package
+[npm-downloads]: https://img.shields.io/npm/dt/react-context-menu-wrapper.png?style=flat
+[npm-version]: https://img.shields.io/npm/v/react-context-menu-wrapper.png?style=flat
+[npm]: https://www.npmjs.org/package/react-context-menu-wrapper
 
-[coveralls-badge]: https://img.shields.io/coveralls/user/repo/master.png?style=flat-square
-[coveralls]: https://coveralls.io/github/user/repo
+[coveralls-badge]: https://img.shields.io/coveralls/v1ndic4te/react-context-menu-wrapper/master.png?style=flat-square
+[coveralls]: https://coveralls.io/github/v1ndic4te/react-context-menu-wrapper
