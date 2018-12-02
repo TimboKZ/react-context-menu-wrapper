@@ -24,7 +24,8 @@
   },
   "devDependencies": {
     "nwb": "0.23.x",
-    "react": "^16.6.3"
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3"
   },
   "peerDependencies": {
     "react": "^16.x"

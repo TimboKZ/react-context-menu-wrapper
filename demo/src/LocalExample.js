@@ -17,7 +17,7 @@ export const LocalExample = () => {
         <div>
             {/* Assign handlers to a component */}
             <div className="my-context-box" style={style} {...handlers}>
-                Right click or long-tap on this box
+                Right click or long press this box
             </div>
 
             {/* Create a context menu */}

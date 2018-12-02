@@ -104,7 +104,7 @@ export function registerShowIntent(data) {
     store.intentWinner = data;
 
     clearTimeout(store.intentTimeout);
-    store.intentTimeout = setTimeout(notifyIntentWinner, 20);
+    store.intentTimeout = setTimeout(notifyIntentWinner, 5);
 }
 
 export function setLastTriggerData(internalId, data) {
@@ -140,7 +140,7 @@ export const prepareContextMenuHandlers = (externalId, data = null) => {
     return {
         onContextMenu: event => {
             const eventDetails = {
-                preventDefault: event.preventDefault,
+                preventDefault: () => event.preventDefault(),
                 triggerSource: event.currentTarget,
                 triggerTarget: event.target,
                 x: event.clientX,
