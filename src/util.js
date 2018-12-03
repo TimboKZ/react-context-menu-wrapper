@@ -262,7 +262,7 @@ export const removeContextMenuEventListener = (id, listener) => {
  * @param {number} [data.x]     x-coordinate to show the menu at
  * @param {number} [data.y]     y-coordinate to show the menu at
  */
-export const showContextMenu = (data) => {
+export const showContextMenu = (data = {}) => {
     const eventDetails = {
         triggerType: TriggerType.Manual,
         triggerContext: data.id ? TriggerContext.Local : TriggerContext.Global,
@@ -287,7 +287,7 @@ export function hideAllContextMenus() {
     dispatchWindowEvent(InternalEvent.HideAllContextMenus);
 }
 
-export const cancelOtherContextMenus = event => {
+export const cancelOtherContextMenus = () => {
     const eventDetails = {
         triggerType: TriggerType.Manual,
         triggerContext: TriggerContext.Cancel,
@@ -297,10 +297,10 @@ export const cancelOtherContextMenus = event => {
 
 /**
  * Prepares an object with handlers for different events
- * @param {string} externalId
+ * @param {string} id
  * @param {*} [data]
  */
-export const prepareContextMenuHandlers = (externalId, data = null) => {
+export const prepareContextMenuHandlers = (id, data = null) => {
     return {
         onContextMenu: event => {
             const eventDetails = {
@@ -312,7 +312,7 @@ export const prepareContextMenuHandlers = (externalId, data = null) => {
                 x: event.clientX,
                 y: event.clientY,
             };
-            dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId, data});
+            dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId: id, data});
         },
     };
 };

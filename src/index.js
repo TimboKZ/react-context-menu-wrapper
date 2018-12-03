@@ -12,10 +12,10 @@ initWindowState();
 export {default as ContextMenuWrapper} from './ContextMenuWrapper';
 export {
     ContextMenuEvent,
+    prepareContextMenuHandlers,
     addContextMenuEventListener,
     removeContextMenuEventListener,
     showContextMenu,
     hideAllContextMenus,
     cancelOtherContextMenus,
-    prepareContextMenuHandlers,
 } from './util';

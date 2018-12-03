@@ -116,26 +116,123 @@ const MyComponent = () => (
 
 Properties supported by `ContextMenuWrapper`:
 
-| Name                 | Type                    | Default value | Description                                                                                                                                                                                    |
+| Name | Type | Default value | Description |
 |----------------------|-------------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `id`                 | String                  | *None*        | A user-defined string that is used to reference this context menu component in helper functions. For example: `file-entry-menu`.                                                               |
-| `global`             | Boolean                 | `false`       | Determines whether the context menu can be opened by right clicking (or long pressing on mobile) anywhere on the page. Note that a context menu can have an ID and be global at the same time. |
-| `onShow`             | *ContextMenuCallback* | *None*        | A callback that is called right before this context menu is shown. See below for more details.                                                                                                 |
-| `onHide`             | *ContextMenuCallback* | *None*        | A callback that is called immediately after this context menu is hidden. See below for more details.                                                                                           |
-| `hideOnScroll`       | Boolean                 | `true`        | Determines whether the menu should disappear when *document* (top level node) is scrolled.                                                                                                     |
-| `hideOnWindowResize` | Boolean                 | `true`        | Determines whether the menu should disappear when the window is resized.                                                                                                                       |
-| `hideOnSelfClick`    | Boolean                 | `true`        | Determines whether the context menu should disappear after something inside it was clicked.                                                                                                    |
-| `hideOnOutsideClick` | Boolean                 | `true`        | Determines whether the context menu should disappear after the user has clicked anything outside of it.                                                                                        |
+| `id` | String | *None* | A user-defined string that is used to reference this context menu component in helper functions. For example: `file-entry-menu`. |
+| `global` | Boolean | `false` | Determines whether the context menu can be opened by right clicking (or long pressing on mobile) anywhere on the page. Note that a context menu can have an ID and be global at the same time. |
+| `onShow` | *Context Menu Callback* | *None* | A callback that is called right before this context menu is shown. (see below for *Context Menu Callback* description) |
+| `onHide` | *Context Menu Callback* | *None* | A callback that is called immediately after this context menu is hidden. (see below for  *Context Menu Callback* description) |
+| `hideOnScroll` | Boolean | `true` | Determines whether the menu should disappear when *document* (top level node) is scrolled. |
+| `hideOnWindowResize` | Boolean | `true` | Determines whether the menu should disappear when the window is resized. |
+| `hideOnSelfClick` | Boolean | `true` | Determines whether the context menu should disappear after something inside it was clicked. |
+| `hideOnOutsideClick` | Boolean | `true` | Determines whether the context menu should disappear after the user has clicked anything outside of it. |
 
 `ContextMenuCallback` is a function of type `(data, publicProps) => void`. `data` is the value that was passed to the
  handlers of the context menu, if any (see `prepareContextMenuHandlers(...)` below). `publicProps` is an object 
  containing the values of the properties listed above.
 
 # Helper functions
-```
-// Coming.
+
+All of the helper functions and enums can be imported from the main package, e.g.:
+```jsx
+import {ContextMenuEvent, addContextMenuEventListener} from 'react-context-menu-wrapper';
+
+// Do something with the `prepareContextMenuHandlers(...)` and the others
 ```
 
+### `prepareContextMenuHandlers(id, data)`
+
+Generates event handlers that can be attached to a trigger component (e.g. image thumbnail). Once attached, these 
+handlers will only show the relevant context menu when the component is clicked. Argument types:
+- `id`: string. The ID of the context menu the handlers will trigger.
+- `data`: any value. `data` can be anything that you want to attach to the trigger. This can be a number, a string, an 
+object, or anything else. The supplied `data` value will be sent to event listeners and callbacks (see below).
+
+The returned object contains various event handlers and looks similar to this:
+```javascript
+const handlers = {
+    onContextMenu: /* some handler */,
+    onTouchStart: /* some handler */,
+    onTouchEnd: /* some handler */,
+}
+```
+Thanks to this structure, the handlers can be attached to other components using an object spread:
+```jsx
+<div {...handlers}>Right click me!</div>
+```
+
+### `addContextMenuEventListener(id, listener)`
+
+Registers a listener for context menu events such as `hide` and `show`. Note that this listener doesn't give you any 
+control over these events, it just notifies you that they took place. Argument types:
+- `id`: string or `null`. When a string is provided, your listener will be attached to the context menu ID that you 
+have specified. If `null` is provided, your listener will be attached to global context menus.
+- `listener`: function of type `(eventName, data, publicProps) => void`. This function is similar to
+`ContextMenuCallback`, except there's an extra argument called `eventName`. `eventName` is a value from the 
+`ContextMenuEvent` enum (see below). `data` is the value that was passed to the handlers of the context menu, if any
+ (see `prepareContextMenuHandlers(...)` above). `publicProps` is an object containing the values of the properties 
+ listed in the table in the first section.
+ 
+Note that a single listener function can listen to multiple IDs, but if you'll try to attach a single listener to the
+ same ID twice, the second call will be ignored and a warning will be printed to the console.
+
+### `removeContextMenuEventListener(id, listener)`
+
+Removes a listener that was previously added. The arguments are identical to the function above.
+ 
+If the listener you try to remove doesn't exist or was never registered, the operation will just silently succeed. 
+Note that you have provide the *exact* same `listener` function that was used to add the listener.
+
+### `ContextMenuEvent` enum
+
+This enum defines the names of the events that the context menu can emit. Available names are `Show` and `Hide`. 
+Example usage:
+```javascript
+const handleContextMenuEvent = (eventName, data, publicProps) => {
+    if (eventName === ContextMenuEvent.Show) {
+        doActionX(data, publicProps);
+    } else if (eventName === ContextMenuEvent.Hide) {
+        doActionY(data, publicProps);
+    } else {
+        // For forward-compatibility, in case we add new states in the future
+        doActionFallback(data, publicProps);
+    }
+};
+```
+
+### `showContextMenu(data)`
+
+Used when you want to trigger a context menu programmatically. Argument types:
+- `data`: object with keys:
+    - `id`: string (optional). When a string is provided, triggers the context menu ID you have specified. Otherwise, a 
+    global context menu is triggered.
+    - `data`: any value (optional). Supplied `data` value will be passed to event listeners and callbacks.
+    - `event`: input event (optional). An instance of `click` or `contextmenu` event. You can pass it in if you don't
+     want to specify `x` and `y` coordinates manually.
+    - `x`: number (optional). The `x` pixel coordinate at which the context menu will be shown.
+    - `y`: number (optional). The `y` pixel coordinate at which the context menu will be shown.
+
+Note that if both `event` and `x, y` are specified, the latter will be used.
+
+### `hideAllContextMenus()`
+
+Hides all visible context menus.
+
+### `cancelOtherContextMenus()`
+
+Cancel the `show` event on all menus that were about to be displayed when the function was invoked. This function is 
+meant to be used to prevent context menus from appearing when a specific component is clicked. For example, imagine 
+you have a global context menu that appears if you right click any element on the page. You also have a button 
+component `MyButton` and you want to make sure no context menu appears when you right click this button. You would 
+achieve this as follows:
+```jsx
+<MyButton onContextMenu={cancelOtherContextMenus}>Button with no context menu.</MyButton>
+```
+
+### Notes
+
+Whenever it says `null`, you don't actually have to provide `null` as the value. As long as the value you provide is 
+falsy, it will be ignored.
 
 [build-badge]: https://img.shields.io/travis/v1ndic4te/react-context-menu-wrapper/master.png?style=flat-square
 [build]: https://travis-ci.org/v1ndic4te/react-context-menu-wrapper
