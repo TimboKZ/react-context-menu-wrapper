@@ -11,7 +11,7 @@ const style = {backgroundColor: '#a3eee3', color: '#007d6a'};
 
 export const LocalExample = () => {
     // Create handlers that will trigger our context menu
-    const handlers = prepareContextMenuHandlers('my-custom-id');
+    const handlers = prepareContextMenuHandlers({id: 'my-custom-id'});
 
     return (
         <div>

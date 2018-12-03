@@ -14,7 +14,7 @@ export class NestedExample extends React.Component {
         const box = boxAcc.shift();
         const name = box[0];
         const style = box[1];
-        const handlers = prepareContextMenuHandlers(name);
+        const handlers = prepareContextMenuHandlers({id: name});
         return <div className="my-box-nested" style={style} {...handlers}>
             <span>{name}</span>
             {this.renderBox(boxAcc)}

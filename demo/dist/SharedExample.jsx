@@ -33,7 +33,7 @@ export class SharedExample extends React.Component {
         for (let i = 0; i < boxNames.length; i++) {
             const name = boxNames[i];
             const selected = this.state.selected[name];
-            const handlers = prepareContextMenuHandlers('my-shared-example', name);
+            const handlers = prepareContextMenuHandlers({id: 'my-shared-example', data: name});
             comps[i] = <div key={name} className="column">
                 <div className="my-box" style={style} {...handlers}>{selected ? `-[ ${name} ]-` : name}</div>
             </div>;

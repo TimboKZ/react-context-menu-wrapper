@@ -73,9 +73,15 @@ export function initWindowState() {
 
         globalContextMenuEventListeners: [], // Array of global listeners defined by the user
         contextMenuEventListenersMap: {}, // Map of ID listeners defined by the user
+
+        holdToShowInterval: 400, // Long press duration in milliseconds
     };
 
-    document.addEventListener('contextmenu', globalContextMenuListener);
+    const globalHandlers = prepareContextMenuHandlers();
+
+    document.addEventListener('contextmenu', globalHandlers.onContextMenu);
+    document.addEventListener('touchstart', globalHandlers.onTouchStart);
+    document.addEventListener('touchend', globalHandlers.onTouchEnd);
 }
 
 export function generateInternalId() {
@@ -310,12 +316,15 @@ export const cancelOtherContextMenus = () => {
 
 /**
  * Prepares an object with handlers for different events
- * @param {string} id
- * @param {*} [data]
+ * @param {number} params
+ * @param {string} [params.id]
+ * @param {*} [params.data]
  */
-export const prepareContextMenuHandlers = (id, data = null) => {
+export function prepareContextMenuHandlers(params = {}) {
     const store = window._reactContextMenuWrapper;
-    const holdToShowMenu = 400;
+    const holdToShowInterval = store.holdToShowInterval;
+    const {id, data} = params;
+    const triggerContext = id ? TriggerContext.Local : TriggerContext.Global;
 
     let handled = false;
 
@@ -331,7 +340,7 @@ export const prepareContextMenuHandlers = (id, data = null) => {
         onContextMenu: event => {
             const eventDetails = {
                 triggerType: TriggerType.Native,
-                triggerContext: TriggerContext.Local,
+                triggerContext,
                 ...extractEventDetails(event),
             };
             dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId: id, data});
@@ -345,23 +354,15 @@ export const prepareContextMenuHandlers = (id, data = null) => {
                 handled = true;
                 const eventDetails = {
                     triggerType: TriggerType.Native,
-                    triggerContext: TriggerContext.Local,
+                    triggerContext,
                     ...extractEventDetails(event),
                 };
                 dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId: id, data});
-            }, holdToShowMenu);
+            }, holdToShowInterval);
             if (id) store.touchTimeoutMap[id] = newTimeout;
             else store.globalTouchTimeout = newTimeout;
         },
+
         onTouchEnd: touchCancel,
     };
-};
-
-function globalContextMenuListener(event) {
-    const eventDetails = {
-        triggerType: TriggerType.Native,
-        triggerContext: TriggerContext.Global,
-        ...extractEventDetails(event),
-    };
-    dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId: null, data: null});
 }

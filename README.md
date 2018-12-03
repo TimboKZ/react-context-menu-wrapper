@@ -63,8 +63,8 @@ class ComponentWithAContextMenu extends Component {
         this.state = {phrase: 'Nothing.'};
 
         // Create "triggers" for our context menu. Each "trigger" has some unique data associated with it.
-        this.redBoxHandlers = prepareContextMenuHandlers('my-context-menu', 'Hello from Lavagirl!');
-        this.blueBoxHandlers = prepareContextMenuHandlers('my-context-menu', 'Hello from Sharkboy!');
+        this.redBoxHandlers = prepareContextMenuHandlers({id: 'my-context-menu', data: 'Hello from Lavagirl!'});
+        this.blueBoxHandlers = prepareContextMenuHandlers({id: 'my-context-menu', data: 'Hello from Sharkboy!'});
     }
 
     // Define our logic for when the context menu is shown
@@ -140,13 +140,14 @@ import {ContextMenuEvent, addContextMenuEventListener} from 'react-context-menu-
 // Do something with the `prepareContextMenuHandlers(...)` and the others
 ```
 
-### `prepareContextMenuHandlers(id, data)`
+### `prepareContextMenuHandlers(params)`
 
 Generates event handlers that can be attached to a trigger component (e.g. image thumbnail). Once attached, these 
 handlers will only show the relevant context menu when the component is clicked. Argument types:
-- `id`: string. The ID of the context menu the handlers will trigger.
-- `data`: any value. `data` can be anything that you want to attach to the trigger. This can be a number, a string, an 
-object, or anything else. The supplied `data` value will be sent to event listeners and callbacks (see below).
+- `params`: object with keys:
+    - `id`: string. The ID of the context menu the handlers will trigger.
+    - `data`: any value. `data` can be anything that you want to attach to the trigger. This can be a number, a string,
+    an object, or anything else. The supplied `data` value will be sent to event listeners and callbacks (see below).
 
 The returned object contains various event handlers and looks similar to this:
 ```javascript
