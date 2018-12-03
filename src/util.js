@@ -360,7 +360,7 @@ export function prepareContextMenuHandlers(params = {}) {
         },
 
         onTouchStart: event => {
-            event.persist();
+            if (event.persist) event.persist();
             touchCancel();
 
             const newTimeout = setTimeout(() => {
