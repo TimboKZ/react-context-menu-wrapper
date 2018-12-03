@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 
 import {
     warn,
+    isMobileDevice,
     InternalEvent,
     TriggerContext,
     ContextMenuEvent,
@@ -234,7 +235,7 @@ export default class ContextMenuWrapper extends Component {
         if (rootH < 1) rootH = 160;
 
         // On mobile, move the center of the component to tap location.
-        if (showIntent.eventDetails.isTouch) clickX -= rootW / 2;
+        if (showIntent.eventDetails.isTouch || isMobileDevice()) clickX -= rootW / 2;
 
         const right = (screenW - clickX) > rootW;
         const left = !right;

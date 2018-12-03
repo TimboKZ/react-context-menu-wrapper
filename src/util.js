@@ -59,6 +59,10 @@ export const extractEventDetails = event => {
     };
 };
 
+export function isMobileDevice() {
+    return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+};
+
 export function windowExists() {
     return typeof window !== 'undefined';
 }
@@ -282,29 +286,33 @@ export const removeContextMenuEventListener = (id, listener) => {
 };
 
 /**
- * @param {object} data
- * @param {string} [data.id]    External ID of the context menu
- * @param {object} [data.data]  Data associated with the event
- * @param {*} [data.event]      ContextMenu event that triggered the logic
- * @param {number} [data.x]     x-coordinate to show the menu at
- * @param {number} [data.y]     y-coordinate to show the menu at
+ * @param {object} params
+ * @param {string} [params.id]  External ID of the context menu
+ * @param {*} [params.data]     Data associated with the event
+ * @param {*} [params.event]    ContextMenu event that triggered the logic
+ * @param {number} [params.x]   x-coordinate to show the menu at
+ * @param {number} [params.y]   y-coordinate to show the menu at
  */
-export const showContextMenu = (data = {}) => {
+export const showContextMenu = (params = {}) => {
     let eventDetails = {
         triggerType: TriggerType.Manual,
-        triggerContext: data.id ? TriggerContext.Local : TriggerContext.Global,
+        triggerContext: params.id ? TriggerContext.Local : TriggerContext.Global,
         x: 0,
         y: 0,
     };
-    if (data.event) {
+    if (params.event) {
         eventDetails = {
             ...eventDetails,
-            ...extractEventDetails(data.event),
+            ...extractEventDetails(params.event),
         };
     }
-    if (data.x) eventDetails.x = data.x;
-    if (data.y) eventDetails.y = data.y;
-    dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId: data.id, data: data.data});
+    if (params.x) eventDetails.x = params.x;
+    if (params.y) eventDetails.y = params.y;
+    dispatchWindowEvent(InternalEvent.TryShowContextMenu, {
+        eventDetails,
+        externalId: params.id,
+        data: params.data,
+    });
 };
 
 export function hideAllContextMenus() {
