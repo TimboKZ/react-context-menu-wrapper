@@ -72,8 +72,8 @@ class ComponentWithAContextMenu extends Component {
         // 'data' variable contains the phrase we initialised our handlers with.
         this.setState({phrase: data});
         
-        // We also have access to the 'publicProps' variable, but we're not going to use. This variable contains the 
-        // properties of the context menu. For example, we could find out:
+        // We also have access to the 'publicProps' variable, but we're not going to use. This variable
+        // contains the properties of the context menu. For example, we could find out:
         //   - The ID of the menu (via 'publicProps.id')
         //   - Whether the menu is global (via 'publicProps.global')
     };
