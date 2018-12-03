@@ -83,14 +83,14 @@ export function initWindowState() {
         globalContextMenuEventListeners: [], // Array of global listeners defined by the user
         contextMenuEventListenersMap: {}, // Map of ID listeners defined by the user
 
-        holdToShowInterval: 400, // Long press duration in milliseconds
+        holdToShowInterval: 420, // Long press duration in milliseconds
     };
 
     const globalHandlers = prepareContextMenuHandlers();
 
     document.addEventListener('contextmenu', globalHandlers.onContextMenu);
-    // document.addEventListener('touchstart', globalHandlers.onTouchStart);
-    // document.addEventListener('touchend', globalHandlers.onTouchEnd);
+    document.addEventListener('touchstart', globalHandlers.onTouchStart);
+    document.addEventListener('touchend', globalHandlers.onTouchEnd);
 }
 
 export function generateInternalId() {
@@ -173,6 +173,9 @@ export function registerShowIntent(data) {
             // Either the existing trigger is also global (which means it will be identical to us) or it is local,
             // in which case we would lose. Either way, we can just return.
             return;
+        } else if (ourDetails.triggerContext === TriggerContext.Local
+            && otherDetails.triggerContext === TriggerContext.Global) {
+            // We won because we're local and the other intent is global.
         } else {
             const ourSource = ourDetails.triggerSource;
             const otherSource = otherDetails.triggerSource;
@@ -328,7 +331,11 @@ export const cancelOtherContextMenus = () => {
 };
 
 /**
- * Prepares an object with handlers for different events
+ * Prepares an object with handlers for different events.
+ *
+ * The long press logic comes from John Doherty's `library long-press`
+ * @see https://github.com/john-doherty/long-press/blob/master/src/long-press.js
+ *
  * @param {number} params
  * @param {string} [params.id]
  * @param {*} [params.data]
@@ -339,43 +346,47 @@ export function prepareContextMenuHandlers(params = {}) {
     const {id, data} = params;
     const triggerContext = id ? TriggerContext.Local : TriggerContext.Global;
 
-    let handled = false;
+    let eventDetails;
 
-    const touchCancel = (event = null) => {
-        if (event && handled) event.preventDefault();
-        let oldTimeout;
-        if (id) oldTimeout = store.touchTimeoutMap[id];
-        else oldTimeout = store.globalTouchTimeout;
-        clearTimeout(oldTimeout);
+    const prepareEventDetails = event => {
+        return {
+            triggerType: TriggerType.Native,
+            triggerContext,
+            ...extractEventDetails(event),
+        };
+    };
+    const dispatchShowRequest = eventDetails => {
+        dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId: id, data});
+    };
+
+    const updateTimeout = (newTimeout = null) => {
+        if (newTimeout) {
+            // Persist new timeout
+            if (id) store.touchTimeoutMap[id] = newTimeout;
+            else store.globalTouchTimeout = newTimeout;
+        } else {
+            // Clear old timeout
+            let oldTimeout;
+            if (id) oldTimeout = store.touchTimeoutMap[id];
+            else oldTimeout = store.globalTouchTimeout;
+            clearTimeout(oldTimeout);
+        }
     };
 
     return {
         onContextMenu: event => {
-            const eventDetails = {
-                triggerType: TriggerType.Native,
-                triggerContext,
-                ...extractEventDetails(event),
-            };
-            dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId: id, data});
+            const eventDetails = prepareEventDetails(event);
+            dispatchShowRequest(eventDetails);
         },
-
         onTouchStart: event => {
-            if (event.persist) event.persist();
-            touchCancel();
-
-            const newTimeout = setTimeout(() => {
-                handled = true;
-                const eventDetails = {
-                    triggerType: TriggerType.Native,
-                    triggerContext,
-                    ...extractEventDetails(event),
-                };
+            eventDetails = prepareEventDetails(event);
+            const timeout = setTimeout(() => {
                 dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId: id, data});
             }, holdToShowInterval);
-            if (id) store.touchTimeoutMap[id] = newTimeout;
-            else store.globalTouchTimeout = newTimeout;
+            updateTimeout(timeout);
         },
-
-        onTouchEnd: touchCancel,
+        onTouchMove: () => updateTimeout(),
+        onTouchEnd: () => updateTimeout(),
+        onTouchCancel: () => updateTimeout(),
     };
 }

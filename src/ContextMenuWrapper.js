@@ -98,6 +98,7 @@ export default class ContextMenuWrapper extends Component {
     }
 
     componentDidMount() {
+        // Listeners for outside/inside clicks
         document.addEventListener('click', this.handleClick);
         document.addEventListener('touchstart', this.handleClick);
 
@@ -124,6 +125,7 @@ export default class ContextMenuWrapper extends Component {
     }
 
     componentWillUnmount() {
+        // Listeners for outside/inside clicks
         document.removeEventListener('click', this.handleClick);
         document.removeEventListener('touchstart', this.handleClick);
 
