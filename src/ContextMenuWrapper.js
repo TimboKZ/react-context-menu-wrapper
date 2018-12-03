@@ -11,6 +11,7 @@ import {
     warn,
     InternalEvent,
     TriggerContext,
+    ContextMenuEvent,
     generateInternalId,
     registerGlobalContextMenu,
     removeGlobalContextMenu,
@@ -19,7 +20,7 @@ import {
     getLastTriggerData,
     emitContextMenuEvent,
     getPropertySize,
-    hideAllContextMenus, ContextMenuEvent,
+    hideAllContextMenus,
 } from './util';
 
 export default class ContextMenuWrapper extends Component {
@@ -97,6 +98,7 @@ export default class ContextMenuWrapper extends Component {
 
     componentDidMount() {
         document.addEventListener('click', this.handleClick);
+        document.addEventListener('touchstart', this.handleClick);
 
         // Setup toggleable handlers
         for (const toggleProp of this.toggleProps) {
@@ -122,6 +124,8 @@ export default class ContextMenuWrapper extends Component {
 
     componentWillUnmount() {
         document.removeEventListener('click', this.handleClick);
+        document.removeEventListener('touchstart', this.handleClick);
+
 
         // Remove toggleable handlers
         for (const toggleProp of this.toggleProps) {
@@ -177,7 +181,10 @@ export default class ContextMenuWrapper extends Component {
         const wasOutside = event.target !== node && !node.contains(event.target);
 
         if (wasOutside && this.props.hideOnOutsideClick) this.hide();
-        else if (this.props.hideOnSelfClick) return this.hide();
+        else if (this.props.hideOnSelfClick) {
+            if (event.touches) setTimeout(() => this.hide(), 200);
+            else this.hide();
+        }
     };
 
     /**

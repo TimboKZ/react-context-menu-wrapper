@@ -42,6 +42,18 @@ export function getPropertySize(node, property) {
     }
 }
 
+export const extractEventDetails = event => {
+    let coordsObject = event;
+    if (event.targetTouches) coordsObject = event.targetTouches[0];
+    return {
+        preventDefault: event.cancelable ? () => event.preventDefault() : null,
+        triggerSource: event.currentTarget,
+        triggerTarget: event.target,
+        x: coordsObject.clientX,
+        y: coordsObject.clientY,
+    };
+};
+
 export function windowExists() {
     return typeof window !== 'undefined';
 }
@@ -55,6 +67,9 @@ export function initWindowState() {
 
         intentTimeout: null, // Holds the debounce timeout for context menu show intents
         intentWinner: null, // Holds the deepest menu intent at the moment debounce is triggered
+
+        globalTouchTimeout: null, // Touch event timeout for global context menus
+        touchTimeoutMap: {}, // Map of touch event timeouts for different IDs
 
         globalContextMenuEventListeners: [], // Array of global listeners defined by the user
         contextMenuEventListenersMap: {}, // Map of ID listeners defined by the user
@@ -238,6 +253,7 @@ export const addContextMenuEventListener = (id, listener) => {
  */
 export const removeContextMenuEventListener = (id, listener) => {
     if (!listener) warn('Tried to register a context menu state listener but no listener object was provided.');
+    const store = window._reactContextMenuWrapper;
 
     let listenerArray;
     if (id) {
@@ -263,20 +279,17 @@ export const removeContextMenuEventListener = (id, listener) => {
  * @param {number} [data.y]     y-coordinate to show the menu at
  */
 export const showContextMenu = (data = {}) => {
-    const eventDetails = {
+    let eventDetails = {
         triggerType: TriggerType.Manual,
         triggerContext: data.id ? TriggerContext.Local : TriggerContext.Global,
-        preventDefault: () => event.preventDefault(),
-        triggerSource: null,
-        triggerTarget: null,
         x: 0,
         y: 0,
     };
     if (data.event) {
-        eventDetails.triggerSource = event.currentTarget;
-        eventDetails.triggerTarget = event.target;
-        eventDetails.x = event.clientX;
-        eventDetails.y = event.clientY;
+        eventDetails = {
+            ...eventDetails,
+            ...extractEventDetails(data.event),
+        };
     }
     if (data.x) eventDetails.x = data.x;
     if (data.y) eventDetails.y = data.y;
@@ -301,19 +314,46 @@ export const cancelOtherContextMenus = () => {
  * @param {*} [data]
  */
 export const prepareContextMenuHandlers = (id, data = null) => {
+    const store = window._reactContextMenuWrapper;
+    const holdToShowMenu = 400;
+
+    let handled = false;
+
+    const touchCancel = (event = null) => {
+        if (event && handled) event.preventDefault();
+        let oldTimeout;
+        if (id) oldTimeout = store.touchTimeoutMap[id];
+        else oldTimeout = store.globalTouchTimeout;
+        clearTimeout(oldTimeout);
+    };
+
     return {
         onContextMenu: event => {
             const eventDetails = {
                 triggerType: TriggerType.Native,
                 triggerContext: TriggerContext.Local,
-                preventDefault: () => event.preventDefault(),
-                triggerSource: event.currentTarget,
-                triggerTarget: event.target,
-                x: event.clientX,
-                y: event.clientY,
+                ...extractEventDetails(event),
             };
             dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId: id, data});
         },
+
+        onTouchStart: event => {
+            event.persist();
+            touchCancel();
+
+            const newTimeout = setTimeout(() => {
+                handled = true;
+                const eventDetails = {
+                    triggerType: TriggerType.Native,
+                    triggerContext: TriggerContext.Local,
+                    ...extractEventDetails(event),
+                };
+                dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId: id, data});
+            }, holdToShowMenu);
+            if (id) store.touchTimeoutMap[id] = newTimeout;
+            else store.globalTouchTimeout = newTimeout;
+        },
+        onTouchEnd: touchCancel,
     };
 };
 
@@ -321,11 +361,7 @@ function globalContextMenuListener(event) {
     const eventDetails = {
         triggerType: TriggerType.Native,
         triggerContext: TriggerContext.Global,
-        preventDefault: () => event.preventDefault(),
-        triggerSource: event.currentTarget,
-        triggerTarget: event.target,
-        x: event.clientX,
-        y: event.clientY,
+        ...extractEventDetails(event),
     };
     dispatchWindowEvent(InternalEvent.TryShowContextMenu, {eventDetails, externalId: null, data: null});
 }

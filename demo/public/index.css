@@ -7,13 +7,23 @@ html, body {
 }
 
 html {
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 body {
-    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
     background-color: #ccc;
+    overflow-y: scroll;
     padding: 1rem;
+}
+
+.no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .container {
