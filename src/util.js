@@ -90,7 +90,9 @@ export function initWindowState() {
 
     document.addEventListener('contextmenu', globalHandlers.onContextMenu);
     document.addEventListener('touchstart', globalHandlers.onTouchStart);
+    document.addEventListener('touchmove', globalHandlers.onTouchEnd);
     document.addEventListener('touchend', globalHandlers.onTouchEnd);
+    document.addEventListener('touchcancel', globalHandlers.onTouchEnd);
 }
 
 export function generateInternalId() {
