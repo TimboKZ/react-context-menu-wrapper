@@ -24,6 +24,7 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: default;
 }
 
 .container {
@@ -42,6 +43,14 @@ body {
     text-align: center;
     font-size: 1.4rem;
     padding: 1rem;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
 }
 
 .my-box-nested {
@@ -51,6 +60,14 @@ body {
     border-radius: 4px;
     text-align: center;
     font-size: 1.4rem;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
 }
 
 .my-box-nested span {

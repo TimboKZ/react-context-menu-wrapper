@@ -390,3 +390,69 @@ export function prepareContextMenuHandlers(params = {}) {
         onTouchCancel: () => updateTimeout(),
     };
 }
+
+/**
+ * @param {object} params
+ * @param {number} [params.clickX]
+ * @param {number} [params.clickY]
+ * @param {*} [params.domNode]
+ * @returns {{x: number, y: number}}
+ */
+export function determineContextMenuPlacement(params) {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    // If no `clickX` and `clickY` were provided, assuming the click was in the middle of the screen.
+    let clickX = params.clickX ? params.clickX : windowWidth / 2;
+    let clickY = params.clickY ? params.clickY : windowHeight / 2;
+
+    // Iterate through context menu children to figure out its actual height
+    let menuWidth, menuHeight;
+    let sizerNode = params.domNode;
+    if (sizerNode) {
+        do {
+            if (!sizerNode) break;
+            menuWidth = getPropertySize(sizerNode, 'width');
+            menuHeight = getPropertySize(sizerNode, 'height');
+            sizerNode = sizerNode.firstChild;
+        } while (menuWidth < 1 || menuHeight < 1);
+    }
+
+    // If we couldn't figure out the actual size, assume size of 220x220
+    if (!menuWidth) menuWidth = 220;
+    if (!menuHeight) menuHeight = 220;
+
+    // A small buffer that's applied to menu position _in rescue scenarios_, i.e. it's not included by default.
+    const buffer = 5;
+
+    let x, y;
+    if (isMobileDevice()) {
+        // On mobile devices, centre the menu on the tap
+        const halfWidth = menuWidth / 2;
+        const halfHeight = menuHeight / 2;
+        x = clickX - halfWidth;
+        y = clickY - halfHeight;
+    } else {
+        // On desktop, mimic native context menu placement
+        const right = (windowWidth - clickX) > menuWidth;
+        const left = !right;
+        const top = (windowHeight - clickY) > menuHeight;
+        const bottom = !top;
+
+        if (right) x = clickX;
+        if (left) x = clickX - menuWidth;
+        if (top) y = clickY;
+        if (bottom) y = clickY - menuHeight;
+    }
+
+    const right = windowWidth - x - menuWidth;
+    const bottom = windowHeight - y - menuHeight;
+
+    if (right < 0) x += right - buffer;
+    if (bottom < 0) y += bottom - buffer;
+
+    if (x < 0) x = buffer;
+    if (y < 0) y = buffer;
+
+    return {x, y};
+}

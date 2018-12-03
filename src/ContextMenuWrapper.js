@@ -22,6 +22,7 @@ import {
     emitContextMenuEvent,
     getPropertySize,
     hideAllContextMenus,
+    determineContextMenuPlacement,
 } from './util';
 
 export default class ContextMenuWrapper extends Component {
@@ -203,6 +204,7 @@ export default class ContextMenuWrapper extends Component {
     }
 
     show = showIntent => {
+        const eventDetails = showIntent.eventDetails;
         const data = getLastTriggerData(this.internalId);
         const publicProps = this.getPublicProps();
 
@@ -217,44 +219,18 @@ export default class ContextMenuWrapper extends Component {
 
         this.setState({visible: true});
 
-        let clickX = showIntent.eventDetails.x;
-        const clickY = showIntent.eventDetails.y;
-        const screenW = window.innerWidth;
-        const screenH = window.innerHeight;
-
-        let rootW;
-        let rootH;
-        let domNode = this.nodeRef.current;
-        if (domNode) {
-            do {
-                if (!domNode) break;
-                rootW = getPropertySize(domNode, 'width');
-                rootH = getPropertySize(domNode, 'height');
-                domNode = domNode.firstChild;
-            } while (rootW < 1 || rootH < 1);
-        }
-        if (rootW < 1) rootW = 80;
-        if (rootH < 1) rootH = 160;
-
-        // On mobile, move the center of the component to tap location.
-        if (showIntent.eventDetails.isTouch || isMobileDevice()) clickX -= rootW / 2;
-
-        const right = (screenW - clickX) > rootW;
-        const left = !right;
-        const top = (screenH - clickY) > rootH;
-        const bottom = !top;
-
-        const style = {};
-        if (right) style.left = `${clickX + 5}px`;
-        if (left) style.left = `${clickX - rootW - 5}px`;
-        if (top) style.top = `${clickY + 5}px`;
-        if (bottom) style.top = `${clickY - rootH - 5}px`;
+        const {x, y} = determineContextMenuPlacement({
+            clickX: eventDetails.x,
+            clickY: eventDetails.y,
+            domNode: this.nodeRef.current,
+        });
 
         this.setState({
             visible: true,
             style: {
                 ...this.state.style,
-                ...style,
+                left: x,
+                top: y,
             },
         });
     };
