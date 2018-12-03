@@ -44,13 +44,18 @@ export function getPropertySize(node, property) {
 
 export const extractEventDetails = event => {
     let coordsObject = event;
-    if (event.targetTouches) coordsObject = event.targetTouches[0];
+    let isTouch = false;
+    if (event.targetTouches) {
+        coordsObject = event.targetTouches[0];
+        isTouch = true;
+    }
     return {
         preventDefault: event.cancelable ? () => event.preventDefault() : null,
         triggerSource: event.currentTarget,
         triggerTarget: event.target,
         x: coordsObject.clientX,
         y: coordsObject.clientY,
+        isTouch,
     };
 };
 

@@ -214,7 +214,7 @@ export default class ContextMenuWrapper extends Component {
 
         this.setState({visible: true});
 
-        const clickX = showIntent.eventDetails.x;
+        let clickX = showIntent.eventDetails.x;
         const clickY = showIntent.eventDetails.y;
         const screenW = window.innerWidth;
         const screenH = window.innerHeight;
@@ -232,6 +232,9 @@ export default class ContextMenuWrapper extends Component {
         }
         if (rootW < 1) rootW = 80;
         if (rootH < 1) rootH = 160;
+
+        // On mobile, move the center of the component to tap location.
+        if (showIntent.eventDetails.isTouch) clickX -= rootW / 2;
 
         const right = (screenW - clickX) > rootW;
         const left = !right;
