@@ -60,8 +60,8 @@ export const extractEventDetails = event => {
 };
 
 export function isMobileDevice() {
-    return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
-};
+    return (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1);
+}
 
 export function windowExists() {
     return typeof window !== 'undefined';
@@ -89,8 +89,8 @@ export function initWindowState() {
     const globalHandlers = prepareContextMenuHandlers();
 
     document.addEventListener('contextmenu', globalHandlers.onContextMenu);
-    document.addEventListener('touchstart', globalHandlers.onTouchStart);
-    document.addEventListener('touchend', globalHandlers.onTouchEnd);
+    // document.addEventListener('touchstart', globalHandlers.onTouchStart);
+    // document.addEventListener('touchend', globalHandlers.onTouchEnd);
 }
 
 export function generateInternalId() {
