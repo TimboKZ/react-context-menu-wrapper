@@ -6,6 +6,8 @@
 This component provides a simple wrapper for your context menu content. It will handle the right click event (or long 
 press on mobile) and menu positioning, but the rest is up to you.
 
+![Gif of the context menu library in action.](https://v1ndic4te.github.io/react-context-menu-wrapper/context-menu-shared.gif)
+
 Unlike other React context menu packages, this one does not provide any styling or pre-made components - you'll 
 have to style the context menu yourself. This is useful when your CSS framework provides dropdown styling - consider 
 dropdowns [from Bootstrap](https://getbootstrap.com/docs/4.1/components/dropdowns/) or
