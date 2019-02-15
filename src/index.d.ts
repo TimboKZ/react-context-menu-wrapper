@@ -1,18 +1,18 @@
 import {Component} from 'react';
 
 export class ContextMenuWrapper extends Component<any, any, any> {
-    readonly id: string | null;
-    readonly global: boolean;
-    readonly onShow: () => void | null;
-    readonly onHide: () => void | null;
-    readonly hideOnSelfClick: boolean;
-    readonly hideOnOutsideClick: boolean;
-    readonly hideOnScroll: boolean;
-    readonly hideOnWindowResize: boolean;
+    readonly id?: string;
+    readonly global?: boolean;
+    readonly onShow?: () => void | null;
+    readonly onHide?: () => void | null;
+    readonly hideOnSelfClick?: boolean;
+    readonly hideOnOutsideClick?: boolean;
+    readonly hideOnScroll?: boolean;
+    readonly hideOnWindowResize?: boolean;
     readonly context: any;
 }
 
-export function prepareContextMenuHandlers(params?: PrepareContextMenuHandlersParams): void;
+export function prepareContextMenuHandlers(params?: PrepareContextMenuHandlersParams): ContextMenuHandlers;
 
 export interface PrepareContextMenuHandlersParams {
     readonly id?: string;
@@ -43,4 +43,10 @@ export interface ShowContextMenuData {
     readonly event?: MouseEvent | ContextMenuEvent;
     readonly x?: any;
     readonly y?: any;
+}
+
+export interface ContextMenuHandlers {
+    onContextMenu: (event: MouseEvent) => void;
+    onTouchStart: (event: TouchEvent) => void;
+    onTouchEnd: (event: TouchEvent) => void;
 }
