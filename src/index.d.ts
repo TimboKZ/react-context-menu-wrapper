@@ -26,7 +26,6 @@ export function removeContextMenuEventListener(id: string | null, listener: Cont
 
 export type ContextMenuEventListener = (eventName: string, data: any | null, publicProps: any) => void
 
-
 export function hideAllContextMenus(): void;
 
 export function cancelOtherContextMenus(): void;
@@ -46,7 +45,8 @@ export interface ShowContextMenuData {
 }
 
 export interface ContextMenuHandlers {
-    onContextMenu: (event: MouseEvent) => void;
-    onTouchStart: (event: TouchEvent) => void;
-    onTouchEnd: (event: TouchEvent) => void;
+    // TODO: not sure what react event types to use.
+    onContextMenu: (event: any) => void;
+    onTouchStart: (event: any) => void;
+    onTouchEnd: (event: any) => void;
 }
