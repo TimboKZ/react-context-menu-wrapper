@@ -5,7 +5,7 @@
  */
 
 const React = require('react');
-import {ContextMenuWrapper} from '../../src';
+import {ContextMenuWrapper} from '../../lib/index';
 
 export class GlobalExample extends React.Component {
     constructor(props) {

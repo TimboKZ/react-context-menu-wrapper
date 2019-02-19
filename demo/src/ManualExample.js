@@ -12,7 +12,7 @@ import {
     showContextMenu,
     hideAllContextMenus,
     cancelOtherContextMenus,
-} from '../../src';
+} from '../../lib/index';
 
 const boxes = [
     // 1) Box name, 2) Context menu ID

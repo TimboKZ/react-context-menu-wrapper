@@ -5,7 +5,7 @@
  */
 
 const React = require('react');
-import {ContextMenuWrapper, prepareContextMenuHandlers} from '../../src';
+import {ContextMenuWrapper, prepareContextMenuHandlers} from '../../lib/index';
 
 const style = {backgroundColor: '#a3eee3', color: '#007d6a'};
 

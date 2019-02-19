@@ -5,7 +5,7 @@
  */
 
 const React = require('react');
-import {ContextMenuWrapper, prepareContextMenuHandlers} from '../../src';
+import {ContextMenuWrapper, prepareContextMenuHandlers} from '../../lib/index';
 
 const boxes = [
     ['Geralt', {backgroundColor: '#ffcccc', color: '#4c1422'}],
