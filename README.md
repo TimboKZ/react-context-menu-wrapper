@@ -6,7 +6,7 @@
 This component provides a simple wrapper for your context menu content. It will handle the right click event (or long 
 press on mobile) and menu positioning, but the rest is up to you.
 
-![Gif of the context menu library in action.](https://v1ndic4te.github.io/react-context-menu-wrapper/context-menu-shared.gif)
+![Gif of the context menu library in action.](https://timbokz.github.io/react-context-menu-wrapper/context-menu-shared.gif)
 
 Unlike other React context menu packages, this one does not provide any styling or pre-made components - you'll 
 have to style the context menu yourself. This is useful when your CSS framework provides dropdown styling - consider 
@@ -22,12 +22,12 @@ dropdowns [from Bootstrap](https://getbootstrap.com/docs/4.1/components/dropdown
 * Correctly displays context menus near the borders of the window.
 * **Does not provide out-of-the-box styling.**
 
-> Please [create an issue](https://github.com/v1ndic4te/react-context-menu-wrapper/issues/new) if you find a bug or
+> Please [create an issue](https://github.com/TimboKZ/react-context-menu-wrapper/issues/new) if you find a bug or
 > want to suggest a new feature.
 
 # Usage examples
 
-[Click here to view demos with example code.](https://v1ndic4te.github.io/react-context-menu-wrapper/)
+[Click here to view demos with example code.](https://timbokz.github.io/react-context-menu-wrapper/)
 
 # Installation
 
@@ -40,10 +40,10 @@ npm install --save react-context-menu-wrapper
 
 Here's an example of a simple context menu. It doesn't showcase many features, but it should give you a basic 
 idea of how this component works. This particular context menu doesn't have any buttons - don't worry, it's pretty easy 
-to add them. Take a look at [demos and examples](https://v1ndic4te.github.io/react-context-menu-wrapper/) to find out
+to add them. Take a look at [demos and examples](https://timbokz.github.io/react-context-menu-wrapper/) to find out
  more.
 
-![Gif of the context menu library in action.](https://v1ndic4te.github.io/react-context-menu-wrapper/context-menu-boxes.gif)
+![Gif of the context menu library in action.](https://timbokz.github.io/react-context-menu-wrapper/context-menu-boxes.gif)
 
 (The context menu in the gif is triggered using a right click and dismissed using a left click.)
 
