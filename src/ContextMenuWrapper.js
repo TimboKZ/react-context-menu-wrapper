@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 
 import {
     warn,
-    isMobileDevice,
     InternalEvent,
     TriggerContext,
     ContextMenuEvent,
@@ -20,7 +19,6 @@ import {
     setLastTriggerData,
     getLastTriggerData,
     emitContextMenuEvent,
-    getPropertySize,
     hideAllContextMenus,
     determineContextMenuPlacement,
 } from './util';
@@ -37,6 +35,7 @@ export default class ContextMenuWrapper extends Component {
 
         // Props that toggle simple event listeners
         global: PropTypes.bool,
+        hideOnEscape: PropTypes.bool,
         hideOnScroll: PropTypes.bool, // TODO: Fix scroll on internal components - right now the menu won't hide.
         hideOnWindowResize: PropTypes.bool,
     };
@@ -46,6 +45,7 @@ export default class ContextMenuWrapper extends Component {
         onShow: null,
         onHide: null,
 
+        hideOnEscape: true,
         hideOnSelfClick: true,
         hideOnOutsideClick: true,
 
@@ -75,6 +75,7 @@ export default class ContextMenuWrapper extends Component {
             // Property, Target, Event, Handler
             [null, window, InternalEvent.HideAllContextMenus, this.hide],
             [null, window, InternalEvent.TryShowContextMenu, this.handleShowRequest],
+            ['hideOnEscape', document, 'keydown', this.handleKeydown],
             ['hideOnScroll', document, 'scroll', this.hide],
             ['hideOnWindowResize', window, 'resize', this.hide],
         ];
@@ -130,7 +131,6 @@ export default class ContextMenuWrapper extends Component {
         document.removeEventListener('click', this.handleClick);
         document.removeEventListener('touchstart', this.handleClick);
 
-
         // Remove toggleable handlers
         for (const toggleProp of this.toggleProps) {
             const [name, target, event, handler] = toggleProp;
@@ -167,7 +167,7 @@ export default class ContextMenuWrapper extends Component {
             && !(this.props.global && eventDetails.triggerContext === TriggerContext.Global)
         ) return;
 
-        // ...otherwise process this event as-if it was meant for us (but we're not sure yet, there may be other
+        // ...otherwise process this event as if it was meant for us (but we're not sure yet, there may be other
         // handlers that have precedence over us.
         const showIntent = {
             internalId: this.internalId,
@@ -189,6 +189,11 @@ export default class ContextMenuWrapper extends Component {
             if (event.touches) setTimeout(() => this.hide(), 200);
             else this.hide();
         }
+    };
+
+    handleKeydown = (event) => {
+        // Hide on escape
+        if (event.keyCode === 27) this.hide();
     };
 
     /**

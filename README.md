@@ -129,6 +129,7 @@ Properties supported by `ContextMenuWrapper`:
 | `global` | Boolean | `false` | Determines whether the context menu can be opened by right clicking (or long pressing on mobile) anywhere on the page. Note that a context menu can have an ID and be global at the same time. |
 | `onShow` | *Context Menu Callback* | *None* | A callback that is called right before this context menu is shown. (see below for *Context Menu Callback* description) |
 | `onHide` | *Context Menu Callback* | *None* | A callback that is called immediately after this context menu is hidden. (see below for  *Context Menu Callback* description) |
+| `hideOnEscape` | Boolean | `true` | Determines whether the menu should disappear when the Escape key is pressed. |
 | `hideOnScroll` | Boolean | `true` | Determines whether the menu should disappear when *document* (top level node) is scrolled. |
 | `hideOnWindowResize` | Boolean | `true` | Determines whether the menu should disappear when the window is resized. |
 | `hideOnSelfClick` | Boolean | `true` | Determines whether the context menu should disappear after something inside it was clicked. |
