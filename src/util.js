@@ -429,11 +429,10 @@ export function determineContextMenuPlacement(params) {
 
     let x, y;
     if (isMobileDevice()) {
-        // On mobile devices, centre the menu on the tap
+        // On mobile devices, horizontally centre the menu on the tap, and place it above the tap
         const halfWidth = menuWidth / 2;
-        const halfHeight = menuHeight / 2;
         x = clickX - halfWidth;
-        y = clickY - halfHeight;
+        y = clickY - menuHeight - 20;
     } else {
         // On desktop, mimic native context menu placement
         const right = (windowWidth - clickX) > menuWidth;
