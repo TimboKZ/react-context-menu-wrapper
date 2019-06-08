@@ -19,7 +19,6 @@ import {
     setLastTriggerData,
     getLastTriggerData,
     emitContextMenuEvent,
-    hideAllContextMenus,
     determineContextMenuPlacement,
     isFirefox
 } from './util';
@@ -259,7 +258,6 @@ export default class ContextMenuWrapper extends Component {
             data,
             publicProps,
         });
-        hideAllContextMenus();
 
         this.ignoreRightClick = true;
 
