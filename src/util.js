@@ -458,6 +458,4 @@ export function determineContextMenuPlacement(params) {
     return {x, y};
 }
 
-export function isFirefox() {
-    return navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-}
+export const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;

@@ -128,7 +128,7 @@ export default class ContextMenuWrapper extends Component {
         document.addEventListener('touchstart', this.handleClick);
 
         // Firefox workaround, see constructor
-        if (isFirefox()) document.addEventListener('mouseup', this.handleMouseup);
+        if (isFirefox) document.addEventListener('mouseup', this.handleMouseup);
 
         // Setup toggleable handlers
         for (const toggleProp of this.toggleProps) {
@@ -216,9 +216,7 @@ export default class ContextMenuWrapper extends Component {
      */
     handleClick = (event) => {
         const isRightClick = event.button === 2;
-        if (isFirefox() && this.ignoreRightClick && isRightClick) {
-            return;
-        }
+        if (isFirefox && this.ignoreRightClick && isRightClick) return;
 
         if (!this.state.visible) return;
 
