@@ -178,8 +178,21 @@ export default class ContextMenuWrapper extends Component {
         registerShowIntent(showIntent);
     };
 
+    /**
+     * Clicking might imply that we should close the context menu.
+     */
     handleClick = (event) => {
-        if (!this.state.visible) return;
+        /*
+        Firefox has a bug where it dispatches a click event when a contextmenu
+        event is dispatched. It's been open for 17 years!
+        https://bugzilla.mozilla.org/show_bug.cgi?id=184051
+        Hence, on Firefox, the context menu would immediately close on releasing
+        the right mouse button.
+        => Not closing the context menu on right button clicks fixes the issue.
+        */
+        const isRightClick = event.button === 2;
+
+        if (!this.state.visible || isRightClick) return;
 
         const node = this.nodeRef.current;
         const wasOutside = event.target !== node && !node.contains(event.target);
