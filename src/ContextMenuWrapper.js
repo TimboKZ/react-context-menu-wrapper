@@ -21,6 +21,7 @@ import {
     emitContextMenuEvent,
     hideAllContextMenus,
     determineContextMenuPlacement,
+    isFirefox
 } from './util';
 
 export default class ContextMenuWrapper extends Component {
@@ -70,6 +71,28 @@ export default class ContextMenuWrapper extends Component {
         // Reference to our own <div>
         this.nodeRef = React.createRef();
 
+        /*
+         Whether to ignore right click events:
+         Firefox has a bug where it dispatches a click event when a contextmenu
+         event is dispatched. It's been open for 17 years!
+         https://bugzilla.mozilla.org/show_bug.cgi?id=184051
+         Hence, on Firefox, the context menu would immediately close on releasing
+         the right mouse button.
+         However, we may want to close previous context menus when right-clicking
+         somewhere outside of some context menu.
+
+         Fix: Ignore all events from right clicks in Firefox caused by opening
+         new ContextMenuWrapper instances until the right mouse button is released.
+         This has to be achieved with a timeout because multiple right mouse click
+         events are being dispatched.
+         Note that simply preventing closure of context menus in the case of
+         right click events does not work because we might right-click
+         and open a native context menu. In that case, we would want 'our'
+         ContextMenuWrapper component to be closed.
+         TODO(cuontheinternet): Get rid of timeout/What events are actually happening
+        */
+        this.ignoreRightClick = false;
+
         // Props that toggle simple event listeners
         this.toggleProps = [
             // Property, Target, Event, Handler
@@ -103,6 +126,9 @@ export default class ContextMenuWrapper extends Component {
         // Listeners for outside/inside clicks
         document.addEventListener('click', this.handleClick);
         document.addEventListener('touchstart', this.handleClick);
+
+        // Firefox workaround, see constructor
+        if (isFirefox()) document.addEventListener('mouseup', this.handleMouseup);
 
         // Setup toggleable handlers
         for (const toggleProp of this.toggleProps) {
@@ -178,21 +204,23 @@ export default class ContextMenuWrapper extends Component {
         registerShowIntent(showIntent);
     };
 
+    handleMouseup = () => {
+        if (this.state.visible) {
+            // Hack for Firefox, see comment in constructor
+            setTimeout(() => this.ignoreRightClick = false, 1);
+        }
+    }
+
     /**
      * Clicking might imply that we should close the context menu.
      */
     handleClick = (event) => {
-        /*
-        Firefox has a bug where it dispatches a click event when a contextmenu
-        event is dispatched. It's been open for 17 years!
-        https://bugzilla.mozilla.org/show_bug.cgi?id=184051
-        Hence, on Firefox, the context menu would immediately close on releasing
-        the right mouse button.
-        => Not closing the context menu on right button clicks fixes the issue.
-        */
         const isRightClick = event.button === 2;
+        if (isFirefox() && this.ignoreRightClick && isRightClick) {
+            return;
+        }
 
-        if (!this.state.visible || isRightClick) return;
+        if (!this.state.visible) return;
 
         const node = this.nodeRef.current;
         const wasOutside = event.target !== node && !node.contains(event.target);
@@ -234,6 +262,8 @@ export default class ContextMenuWrapper extends Component {
             publicProps,
         });
         hideAllContextMenus();
+
+        this.ignoreRightClick = true;
 
         this.setState({visible: true});
 
