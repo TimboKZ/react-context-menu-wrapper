@@ -1,6 +1,6 @@
 {
   "name": "react-context-menu-wrapper",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "react-context-menu-wrapper React component",
   "main": "lib/index.js",
   "module": "es/index.js",
