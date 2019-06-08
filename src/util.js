@@ -377,6 +377,7 @@ export function prepareContextMenuHandlers(params = {}) {
 
     return {
         onContextMenu: event => {
+            hideAllContextMenus();
             const eventDetails = prepareEventDetails(event);
             dispatchShowRequest(eventDetails);
         },
