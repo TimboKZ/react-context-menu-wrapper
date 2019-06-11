@@ -1,13 +1,15 @@
 {
   "name": "react-context-menu-wrapper",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "react-context-menu-wrapper React component",
   "main": "lib/index.js",
+  "types": "./src/index.d.ts",
   "module": "es/index.js",
   "files": [
     "css",
     "es",
     "lib",
+    "src/index.d.ts",
     "umd"
   ],
   "scripts": {
