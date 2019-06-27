@@ -1,4 +1,4 @@
-const React = require('react');
+import React from 'react';
 import {
     ContextMenuEvent,
     addContextMenuEventListener,
@@ -13,7 +13,7 @@ const boxes = [
     ['local', 'my-custom-id'],
     ['global', null],
     ['shared', 'my-shared-example'],
-    ['nested', 'Geralt'],
+    ['nested', 'nested-menu'],
 ];
 
 export class ManualExample extends React.Component {
@@ -100,4 +100,3 @@ export class ManualExample extends React.Component {
         return (<div className="columns">{this.renderBoxes()}</div>);
     }
 }
-

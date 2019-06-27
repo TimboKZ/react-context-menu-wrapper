@@ -1,10 +1,10 @@
 /**
- * @author v1ndic4te
- * @copyright 2018
- * @licence GPL-3.0
+ * @author Timur Kuzhagaliyev <tim.kuzh@gmail.com>
+ * @copyright 2019
+ * @licence MIT
  */
 
-const React = require('react');
+import React from 'react';
 import {
     ContextMenuEvent,
     addContextMenuEventListener,
@@ -19,7 +19,7 @@ const boxes = [
     ['local', 'my-custom-id'],
     ['global', null],
     ['shared', 'my-shared-example'],
-    ['nested', 'Geralt'],
+    ['nested', 'nested-menu'],
 ];
 
 export class ManualExample extends React.Component {

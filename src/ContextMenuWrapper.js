@@ -1,7 +1,7 @@
 /**
- * @author v1ndic4te
- * @copyright 2018
- * @licence GPL-3.0
+ * @author Timur Kuzhagaliyev <tim.kuzh@gmail.com>
+ * @copyright 2019
+ * @licence MIT
  */
 
 import React, {Component} from 'react';
@@ -21,7 +21,7 @@ import {
     emitContextMenuEvent,
     hideAllContextMenus,
     determineContextMenuPlacement,
-    isFirefox
+    isFirefox,
 } from './util';
 
 export default class ContextMenuWrapper extends Component {
@@ -30,6 +30,8 @@ export default class ContextMenuWrapper extends Component {
         id: PropTypes.string,
         onShow: PropTypes.func,
         onHide: PropTypes.func,
+
+        render: PropTypes.func,
 
         hideOnSelfClick: PropTypes.bool,
         hideOnOutsideClick: PropTypes.bool,
@@ -46,6 +48,8 @@ export default class ContextMenuWrapper extends Component {
         onShow: null,
         onHide: null,
 
+        render: null,
+
         hideOnEscape: true,
         hideOnSelfClick: true,
         hideOnOutsideClick: true,
@@ -60,9 +64,10 @@ export default class ContextMenuWrapper extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            style: {},
             node: null,
             visible: false,
-            style: {},
+            lastShowIntentData: undefined,
         };
 
         // Generate internal ID and relevant intent handling function
@@ -209,7 +214,7 @@ export default class ContextMenuWrapper extends Component {
             // Hack for Firefox, see comment in constructor
             setTimeout(() => this.ignoreRightClick = false, 1);
         }
-    }
+    };
 
     /**
      * Clicking might imply that we should close the context menu.
@@ -263,7 +268,7 @@ export default class ContextMenuWrapper extends Component {
 
         this.ignoreRightClick = true;
 
-        this.setState({visible: true});
+        this.setState({visible: true, lastShowIntentData: data});
 
         const {x, y} = determineContextMenuPlacement({
             clickX: eventDetails.x,
@@ -298,16 +303,21 @@ export default class ContextMenuWrapper extends Component {
     };
 
     render() {
-        const style = {
+        const {render, children} = this.props;
+        const {style, visible, lastShowIntentData} = this.state;
+
+        const wrapperStyle = {
             zIndex: '999',
             position: 'fixed',
-            ...this.state.style,
-            display: this.state.visible ? 'block' : 'none',
+            ...style,
         };
 
+        if (!visible) return null;
+
         return (
-            <div style={style} ref={this.nodeRef}>
-                {this.props.children}
+            <div style={wrapperStyle} ref={this.nodeRef}>
+                {!!render && render(lastShowIntentData)}
+                {children}
             </div>
         );
     }

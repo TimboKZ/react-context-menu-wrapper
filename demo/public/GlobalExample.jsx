@@ -1,5 +1,26 @@
-const React = require('react');
+import React from 'react';
 import {ContextMenuWrapper} from 'react-context-menu-wrapper';
+
+const MyContextMenu = (props) => {
+    const onClick = props.changePageColour;
+    return (
+        <div className="dropdown is-active">
+            <div className="dropdown-menu">
+                <div className="dropdown-content" style={{backgroundColor: '#e2f2fd'}}>
+                    <div className="dropdown-item">
+                        This is a <strong>global</strong> context menu. It is styled using classes from
+                        the <a href="https://bulma.io/documentation/components/dropdown/"
+                               target="_blank">Bulma CSS framework.</a>
+                    </div>
+                    <hr className="dropdown-divider"/>
+                    <a href="#" className="dropdown-item" onClick={onClick}>
+                        Change page background
+                    </a>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export class GlobalExample extends React.Component {
     constructor(props) {
@@ -9,33 +30,17 @@ export class GlobalExample extends React.Component {
 
     handleChange = event => this.setState({enabled: event.target.checked});
 
-    renderContextMenu() {
-        if (!this.state.enabled) return;
-        return (
-            <ContextMenuWrapper global={true}>
-                <div className="dropdown is-active">
-                    <div className="dropdown-menu">
-                        <div className="dropdown-content" style={{backgroundColor: '#e2f2fd'}}>
-                            <div className="dropdown-item">
-                                This is a <strong>global</strong> context menu. It is styled using classes from
-                                the <a href="https://bulma.io/documentation/components/dropdown/"
-                                       target="_blank">Bulma CSS framework.</a>
-                            </div>
-                            <hr className="dropdown-divider"/>
-                            <a href="#" className="dropdown-item" onClick={window.changePageColour}>
-                                Change page background
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </ContextMenuWrapper>
-        );
-    }
-
     render() {
-        const enabled = this.state.enabled;
+        const {enabled} = this.state;
+
         return <div>
-            {this.renderContextMenu()}
+            {/* Create a context menu */}
+            {enabled &&
+            <ContextMenuWrapper global={true}>
+                <MyContextMenu changePageColour={window.changePageColour}/>
+            </ContextMenuWrapper>
+            }
+
             <div className="field">
                 <input id="global-switch" type="checkbox" className="switch is-large is-info"
                        checked={enabled || ''} onChange={this.handleChange}/>
@@ -45,4 +50,4 @@ export class GlobalExample extends React.Component {
             </div>
         </div>;
     }
-};
+}

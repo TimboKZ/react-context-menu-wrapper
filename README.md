@@ -25,6 +25,15 @@ dropdowns [from Bootstrap](https://getbootstrap.com/docs/4.1/components/dropdown
 > Please [create an issue](https://github.com/TimboKZ/react-context-menu-wrapper/issues/new) if you find a bug or
 > want to suggest a new feature.
 
+# Important changes
+
+Version 2.* uses different logic to handle visibility of the context menu. In version 1, whenever context menu was
+invisible, CSS style `display: none;` would be applied to it, but React components inside the `<ContextMenuWrapper>`
+would remained **mounted**.
+
+In version 2, when the menu is hidden, all children of `<ContextMenuWrapper>` are unmounted. When the context menu is
+shown, the children are mounted anew.
+
 # Usage examples
 
 [Click here to view demos with example code.](https://timbokz.github.io/react-context-menu-wrapper/)
@@ -38,10 +47,9 @@ npm install --save react-context-menu-wrapper
 
 # The gist
 
-Here's an example of a simple context menu. It doesn't showcase many features, but it should give you a basic 
-idea of how this component works. This particular context menu doesn't have any buttons - don't worry, it's pretty easy 
-to add them. Take a look at [demos and examples](https://timbokz.github.io/react-context-menu-wrapper/) to find out
- more.
+Here's an example of a simple context menu. It doesn't showcase many features, but it should give you a basic idea of
+how this component works. This particular context menu doesn't have any buttons - don't worry, it's pretty easy to add
+them. Take a look at [demos and examples](https://timbokz.github.io/react-context-menu-wrapper/) to find out more.
 
 ![Gif of the context menu library in action.](https://timbokz.github.io/react-context-menu-wrapper/context-menu-boxes.gif)
 
@@ -129,15 +137,19 @@ Properties supported by `ContextMenuWrapper`:
 | `global` | Boolean | `false` | Determines whether the context menu can be opened by right clicking (or long pressing on mobile) anywhere on the page. Note that a context menu can have an ID and be global at the same time. |
 | `onShow` | *Context Menu Callback* | *None* | A callback that is called right before this context menu is shown. (see below for *Context Menu Callback* description) |
 | `onHide` | *Context Menu Callback* | *None* | A callback that is called immediately after this context menu is hidden. (see below for  *Context Menu Callback* description) |
+| `render` | *Render Function* | *None* | A function that should return the contents of the context menu when called, which happens when the menu is mounted (i.e. becomes visible). If `render` prop is specified, the React components it returns will be rendered before the children of `ReactContextMenuWrapper`. (see below for  *Render Function* description) |
 | `hideOnEscape` | Boolean | `true` | Determines whether the menu should disappear when the Escape key is pressed. |
 | `hideOnScroll` | Boolean | `true` | Determines whether the menu should disappear when *document* (top level node) is scrolled. |
 | `hideOnWindowResize` | Boolean | `true` | Determines whether the menu should disappear when the window is resized. |
 | `hideOnSelfClick` | Boolean | `true` | Determines whether the context menu should disappear after something inside it was clicked. |
 | `hideOnOutsideClick` | Boolean | `true` | Determines whether the context menu should disappear after the user has clicked anything outside of it. |
 
-`ContextMenuCallback` is a function of type `(data, publicProps) => void`. `data` is the value that was passed to the
- handlers of the context menu, if any (see `prepareContextMenuHandlers(...)` below). `publicProps` is an object 
- containing the values of the properties listed above.
+**Render Function** is a function of type `(data) => React.Component`. `data` is the value that was passed to
+the handlers of the context menu, if any (see `prepareContextMenuHandlers(...)` below).
+
+**Context Menu Callback** is a function of type `(data, publicProps) => void`. `data` is the value that was passed to
+the handlers of the context menu, if any (see `prepareContextMenuHandlers(...)` below). `publicProps` is an object
+containing the values of the properties listed above.
 
 # Helper functions
 

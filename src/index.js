@@ -1,7 +1,7 @@
 /**
- * @author v1ndic4te <vndc4t0r@gmail.com>
- * @copyright 2018
- * @licence GPL-3.0
+ * @author Timur Kuzhagaliyev <tim.kuzh@gmail.com>
+ * @copyright 2019
+ * @licence MIT
  */
 
 import {windowExists, initWindowState} from './util';

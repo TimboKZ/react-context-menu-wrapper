@@ -1,10 +1,10 @@
 {
   "name": "react-context-menu-wrapper",
-  "version": "1.0.10",
-  "description": "react-context-menu-wrapper React component",
-  "main": "lib/index.js",
+  "version": "2.0.0",
+  "description": "React wrapper for context menus",
+  "main": "./lib/index.js",
   "types": "./src/index.d.ts",
-  "module": "es/index.js",
+  "module": "./es/index.js",
   "files": [
     "css",
     "es",
@@ -33,15 +33,16 @@
     "react": "^16.x"
   },
   "author": {
-    "name": "v1ndic4te",
-    "email": "vndc4t0r@gmail.com"
+    "name": "Timur Kuzhagaliyev",
+    "email": "tim.kuzh@gmail.com",
+    "url": "https://foxypanda.me/"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/v1ndic4te/react-context-menu-wrapper/issues"
+    "url": "https://github.com/TimboKZ/react-context-menu-wrapper/issues"
   },
-  "homepage": "https://github.com/v1ndic4te/react-context-menu-wrapper#readme",
-  "repository": "",
+  "homepage": "https://github.com/TimboKZ/react-context-menu-wrapper#readme",
+  "repository": "https://github.com/TimboKZ/react-context-menu-wrapper",
   "keywords": [
     "react",
     "context-menu",

@@ -1,13 +1,28 @@
 /**
- * @author v1ndic4te
- * @copyright 2018
- * @licence GPL-3.0
+ * @author Timur Kuzhagaliyev <tim.kuzh@gmail.com>
+ * @copyright 2019
+ * @licence MIT
  */
 
-const React = require('react');
+import React from 'react';
 import {ContextMenuWrapper, prepareContextMenuHandlers} from '../../src';
 
 const style = {backgroundColor: '#a3eee3', color: '#007d6a'};
+
+const MyContextMenu = (props) => {
+    const onClick = props.changePageColour;
+    return (
+        <div className="my-dropdown">
+            <div className="my-item my-text">
+                This is a <strong>local</strong> context menu. It is styled using <em>custom CSS</em>.
+            </div>
+            <hr className="my-separator"/>
+            <a href="#" className="my-item my-button" onClick={onClick}>
+                Change page background
+            </a>
+        </div>
+    );
+};
 
 export const LocalExample = () => {
     // Create handlers that will trigger our context menu
@@ -22,15 +37,7 @@ export const LocalExample = () => {
 
             {/* Create a context menu */}
             <ContextMenuWrapper id="my-custom-id">
-                <div className="my-dropdown">
-                    <div className="my-item my-text">
-                        This is a <strong>local</strong> context menu. It is styled using <em>custom CSS</em>.
-                    </div>
-                    <hr className="my-separator"/>
-                    <a href="#" className="my-item my-button" onClick={window.changePageColour}>
-                        Change page background
-                    </a>
-                </div>
+                <MyContextMenu changePageColour={window.changePageColour}/>
             </ContextMenuWrapper>
         </div>
     );
