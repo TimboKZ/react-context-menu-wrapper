@@ -259,9 +259,11 @@ achieve this as follows:
 ```
 
 ### Notes
-
-Whenever it says `null`, you don't actually have to provide `null` as the value. As long as the value you provide is 
-falsy, it will be ignored.
+* Calling `prepareContextMenuHandlers(...)` is a relatively expensive operation, so try to minimize the number of times
+  you create new handlers. For example, if the menu ID and handler data never change, consider creating a static
+  variable that will hold all context menu handlers. This variable can then be passed to all relevant elements.
+* Whenever it says `null`, you don't actually have to provide `null` as the value. As long as the value you provide is
+  falsy, it will be ignored.
 
 [build-badge]: https://img.shields.io/travis/v1ndic4te/react-context-menu-wrapper/master.png?style=flat-square
 [build]: https://travis-ci.org/v1ndic4te/react-context-menu-wrapper

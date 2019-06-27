@@ -1,6 +1,6 @@
 {
   "name": "react-context-menu-wrapper",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "React wrapper for context menus",
   "main": "./lib/index.js",
   "types": "./src/index.d.ts",
