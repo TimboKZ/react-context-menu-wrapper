@@ -57,53 +57,61 @@ them. Take a look at [demos and examples](https://timbokz.github.io/react-contex
 
 ```jsx
 // Import our packages, the usual way.
-import React, {Component} from 'react';
+import React from 'react';
 import {ContextMenuWrapper, prepareContextMenuHandlers} from 'react-context-menu-wrapper';
-
+ 
 // Define some styles - remember that `react-context-menu-wrapper` does not provide any styling out-of-the-box.
 const contextMenuStyle = {backgroundColor: '#eec185', padding: '10px', boxShadow: '0 3px 5px rgba(0, 0, 0, 0.5)'};
-const blueBoxStyle = {backgroundColor: '#3e48f9', color: '#fff', padding: '40px'};
-const redBoxStyle = {backgroundColor: '#aa2d35', color: '#fff', padding: '40px'};
+const styles = [
+  {backgroundColor: '#3e48f9', color: '#fff', padding: '40px'},
+  {backgroundColor: '#aa2d35', color: '#fff', padding: '40px'},
+];
 
-class ComponentWithAContextMenu extends Component {
+const MyContextMenu = (props) => {
+  const {phrase} = props;
+  return (
+    <div style={contextMenuStyle}>
+      <div>The box says: <strong>{phrase}</strong></div>
+    </div>
+  );
+};
+
+export default class ComponentWithAContextMenu extends React.Component {
     constructor(props) {
         super(props);
-
-        // Set the initial phrase to some dummy value.
-        this.state = {phrase: 'Nothing.'};
-
+ 
         // Create "triggers" for our context menu. Each "trigger" has some unique data associated with it.
-        this.redBoxHandlers = prepareContextMenuHandlers({id: 'my-context-menu', data: 'Hello from Lavagirl!'});
-        this.blueBoxHandlers = prepareContextMenuHandlers({id: 'my-context-menu', data: 'Hello from Sharkboy!'});
+        const redData = {index: 0, phrase: 'Hello from Lavagirl!'};
+        const blueData = {index: 1, phrase: 'Hello from Sharkboy!'};
+        this.redBoxHandlers = prepareContextMenuHandlers({id: 'my-context-menu', data: redData});
+        this.blueBoxHandlers = prepareContextMenuHandlers({id: 'my-context-menu', data: blueData});
     }
-
+ 
     // Define the logic for when the context menu is shown
     handleContextMenuShow = (data, publicProps) => {
         // 'data' variable contains the phrase we initialised our handlers with.
-        this.setState({phrase: data});
+        console.log(`Current menu's phrase: ${data.phrase}`);
         
         // We also have access to the 'publicProps' variable, but we're not going to use it. This variable
         // contains the properties of the context menu. For example, we could find out:
         //   - The ID of the menu (via 'publicProps.id')
         //   - Whether the menu is global (via 'publicProps.global')
     };
-
+ 
     render() {
         return (
             <div style={{fontSize: '1.4rem'}}>
                 {/* Render the boxes that will trigger the context menu */}
-                <div {...this.blueBoxHandlers} style={blueBoxStyle}>Blue box</div>
-                <div {...this.redBoxHandlers} style={redBoxStyle}>Red box</div>
-
+                <div {...this.blueBoxHandlers} style={styles[0]}>Blue box</div>
+                <div {...this.redBoxHandlers} style={styles[1]}>Red box</div>
+ 
                 {/*
                 Include the component for the context menu itself. Note that this component doesn't have to be on
                 the same level as triggers. In fact, the context menu can even come from a different React tree!
                 */}
-                <ContextMenuWrapper id="my-context-menu" onShow={this.handleContextMenuShow}>
-                    <div style={contextMenuStyle}>
-                        <div>The box says: <strong>{this.state.phrase}</strong></div>
-                    </div>
-                </ContextMenuWrapper>
+                <ContextMenuWrapper id="my-context-menu"
+                                 onShow={this.handleContextMenuShow}
+                                 render={data => <MyContextMenu phrase={data.phrase}/>}/>
             </div>
         );
     }
