@@ -1,0 +1,61 @@
+{
+  "name": "react-context-menu-wrapper",
+  "version": "3.0.0",
+  "description": "Unopinionated context menu component for React",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build:ts": "tsc",
+    "build:all": "npm run build:ts; npm run build:sb",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Tim Kuzhagaliyev",
+    "email": "tim.kuzh@gmail.com",
+    "url": "https://foxypanda.me/"
+  },
+  "homepage": "https://timbokz.github.io/react-context-menu-wrapper/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TimboKZ/react-context-menu-wrapper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TimboKZ/react-context-menu-wrapper/issues"
+  },
+  "keywords": [
+    "react",
+    "context-menu",
+    "context-menu-react",
+    "context-menu-component",
+    "event-handler",
+    "menu",
+    "react-component"
+  ],
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.5.0",
+    "@typescript-eslint/parser": "^2.5.0",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-react": "^7.16.0",
+    "prettier": "^1.18.2",
+    "prop-types": "^15.7.2"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.3",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "tsdef": "0.0.13",
+    "typescript": "^3.6.4"
+  }
+}
