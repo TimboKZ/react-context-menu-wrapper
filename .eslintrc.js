@@ -45,7 +45,7 @@ module.exports = {
         'import/no-unresolved': 'off',
         'import/no-namespace': 'error',
         'import/no-duplicates': 'error',
-        'import/no-default-export': 'error',
+        'import/no-default-export': 'off',
         'import/no-internal-modules': 'off',
         'import/newline-after-import': 'error',
         'import/order': [
