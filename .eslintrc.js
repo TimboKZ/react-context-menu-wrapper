@@ -55,7 +55,7 @@ module.exports = {
                 groups: ['builtin', 'external', 'parent', 'index', 'sibling'],
             },
         ],
-        '@typescript-eslint/no-unused-vars': 'error',
+        '@typescript-eslint/no-unused-vars': 'warn',
         '@typescript-eslint/explicit-member-accessibility': 'error',
         'prettier/prettier': 'off',
     },

@@ -8,9 +8,10 @@
     "lib"
   ],
   "scripts": {
-    "start": "cd demo; npm start",
+    "start": "styleguidist server",
     "build:ts": "tsc",
-    "build:all": "npm run build:ts; npm run build:sb",
+    "build:sg": "styleguidist build",
+    "build:all": "npm run build:ts; npm run build:sg",
     "watch:ts": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -41,7 +42,6 @@
     "@types/events": "^3.0.0",
     "@types/shortid": "0.0.29",
     "prop-types": "^15.7.2",
-    "react-base-hooks": "0.0.3",
     "shortid": "^2.2.15"
   },
   "peerDependencies": {
@@ -49,12 +49,20 @@
     "react-dom": "^16.8.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-react": "^7.6.3",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.3",
     "@typescript-eslint/eslint-plugin": "^2.5.0",
     "@typescript-eslint/parser": "^2.5.0",
+    "awesome-typescript-loader": "^5.2.1",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "css-loader": "^3.2.0",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.5.0",
+    "eslint-loader": "^3.0.2",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.1",
@@ -62,7 +70,9 @@
     "eslint-plugin-react-hooks": "^2.2.0",
     "prettier": "^1.18.2",
     "react": "^16.11.0",
+    "react-docgen-typescript": "^1.15.1",
     "react-dom": "^16.11.0",
+    "style-loader": "^1.0.0",
     "tsdef": "0.0.13",
     "typescript": "^3.6.4"
   }

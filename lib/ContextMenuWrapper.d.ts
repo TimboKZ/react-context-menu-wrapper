@@ -1,11 +1,11 @@
 import React from 'react';
-import { ContextMenuEvent } from './util';
+import { ContextMenuEvent } from './handlers';
 export interface ContextMenuWrapperProps {
     id?: string;
     global?: boolean;
-    render?: (event: ContextMenuEvent) => React.ElementType;
+    children?: React.ReactElement;
     onShow?: (event: ContextMenuEvent) => void;
-    onHide?: (event: ContextMenuEvent) => void;
+    onHide?: () => void;
     hideOnSelfClick?: boolean;
     hideOnOutsideClick?: boolean;
     hideOnEscape?: boolean;

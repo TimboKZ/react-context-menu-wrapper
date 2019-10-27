@@ -9,6 +9,9 @@ styling (e.g. [Bulma](https://bulma.io/), [Bootstrap](https://getbootstrap.com/)
 non-trivial logic for your context menu (e.g. [Ogma context menus](https://github.com/TimboKZ/Ogma) with tagging
 support).
 
+> **Important:** React Context Menu Wrapper v3+ uses [React hooks](https://reactjs.org/docs/hooks-intro.html) and
+functional components. If your project does not support them, consider using v2 or below.
+
 Preview
 ------
 

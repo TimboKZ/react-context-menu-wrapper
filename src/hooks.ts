@@ -1,29 +1,49 @@
-import { useEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
+import { Nullable } from 'tsdef';
 
-import { handleContextMenu, deleteData, saveData } from './util';
+import { deleteData, generateDataId, saveData } from './globalState';
+import { ContextMenuEvent, DataAttributes, LocalHandlers } from './handlers';
+
+const UNINITIALIZED_SENTINEL = {};
+export const useLazyValue = <T>(factory: () => T): T => {
+    const valueRef = useRef<T>(UNINITIALIZED_SENTINEL as T);
+    if (valueRef.current === UNINITIALIZED_SENTINEL) valueRef.current = factory();
+    return valueRef.current;
+};
+
+export const ContextMenuEventContext = React.createContext<Nullable<ContextMenuEvent>>(null);
+export const useContextMenuEvent = (): Nullable<ContextMenuEvent> => {
+    return useContext(ContextMenuEventContext);
+};
 
 export interface ContextMenuHandlerObject {
-    onContextMenu: (event: MouseEvent) => void;
-    'data-contextmenu-id': string;
-    'data-contextmenu-data-id'?: string;
+    onContextMenu: (event: React.MouseEvent) => void;
+    [DataAttributes.MenuId]?: string;
+    [DataAttributes.DataId]?: string;
 }
-
-export const useContextMenuHandlers = (menuId: string, data?: any) => {
-    const handlers: ContextMenuHandlerObject = useMemo(
-        () => ({
-            onContextMenu: handleContextMenu,
-            'data-contextmenu-id': menuId,
-        }),
-        [menuId]
-    );
+export const useContextMenuHandlers = (
+    ref: React.RefObject<HTMLElement>,
+    { id, data }: { id?: string; data?: any }
+): void => {
+    const dataId = useLazyValue(() => generateDataId());
 
     useEffect(() => {
-        const dataId = saveData(data);
-        if (dataId) handlers['data-contextmenu-data-id'] = dataId;
-        return () => {
-            if (dataId) deleteData(dataId);
-        };
+        saveData(dataId, data);
+        return () => deleteData(dataId);
     }, [data]);
 
-    return handlers;
+    useEffect(() => {
+        const { current } = ref;
+        if (!current) return;
+
+        if (id) current.setAttribute(DataAttributes.MenuId, id);
+        current.setAttribute(DataAttributes.DataId, dataId);
+        current.addEventListener('contextmenu', LocalHandlers.handleContextMenu);
+
+        return () => {
+            current.removeAttribute(DataAttributes.MenuId);
+            current.removeAttribute(DataAttributes.DataId);
+            current.removeEventListener('contextmenu', LocalHandlers.handleContextMenu);
+        };
+    }, [ref.current]);
 };

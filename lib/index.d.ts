@@ -1,3 +1,3 @@
 export { ContextMenuWrapper, ContextMenuWrapperProps } from './ContextMenuWrapper';
-export { useContextMenuHandlers } from './hooks';
-export { ContextMenuEvent } from './util';
+export { ContextMenuEvent } from './handlers';
+export { useContextMenuEvent, useContextMenuHandlers } from './hooks';
