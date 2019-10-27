@@ -60,6 +60,10 @@ module.exports = {
         'prettier/prettier': 'off',
     },
     settings: {
+        react: {
+            pragma: 'React', // Pragma to use, default to "React"
+            version: 'detect',
+        },
         'import/extensions': ['.js', '.jsx', '.ts', '.tsx'],
     },
 };

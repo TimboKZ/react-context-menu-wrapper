@@ -4,11 +4,18 @@ This section talks about context menus that always display the same content.
 
 To make a context menu global, simply set the `global` prop to `true`. The simplest global menu could look like this:
 ```jsx
-<ContextMenuWrapper global={true}>
-    <div className="context-menu">
-        <p>I am a global context menu!</p>
-    </div>
-</ContextMenuWrapper>
+import React from 'react';
+import { ContextMenuWrapper } from 'react-context-menu-wrapper';
+
+export const GlobalMenuExample = () => {
+    return (
+        <ContextMenuWrapper global={true}>
+            <div className="context-menu">
+                <p>I am a global context menu!</p>
+            </div>
+        </ContextMenuWrapper>
+    );
+};
 ```
 
 This component will automatically replace the default context menu of your browser. Try right-clicking (or
@@ -33,11 +40,12 @@ export const LocalMenuExample = () => {
     const menuId = 'my-component-local-menu';
     const bannerRef = useRef();
 
-    // This method attaches relevant DOM event listeners to `bannerRef`.
+    // This hook attaches relevant DOM event listeners to `bannerRef`.
     useContextMenuHandlers(bannerRef, { id: menuId });
 
     return (
         <React.Fragment>
+            // We attach `bannerRef` to the component that will trigger the context menu: 
             <div ref={bannerRef} className="banner">Right click or long-press this box</div>
 
             <ContextMenuWrapper id={menuId}>

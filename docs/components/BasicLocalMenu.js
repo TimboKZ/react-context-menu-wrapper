@@ -5,7 +5,7 @@ const LocalMenuExample = () => {
     const menuId = 'my-component-local-menu';
     const bannerRef = useRef();
 
-    // This method attaches relevant DOM event listeners to `bannerRef`.
+    // This hook attaches relevant DOM event listeners to `bannerRef`.
     useContextMenuHandlers(bannerRef, { id: menuId });
 
     return (
