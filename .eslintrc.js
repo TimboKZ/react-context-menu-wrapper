@@ -6,6 +6,7 @@ module.exports = {
     extends: [
         'eslint:recommended',
         'plugin:react/recommended',
+        'plugin:jsx-a11y/recommended',
         'plugin:import/errors',
         'plugin:import/warnings',
         'plugin:@typescript-eslint/eslint-recommended',
@@ -24,7 +25,7 @@ module.exports = {
         ecmaVersion: 2018,
         sourceType: 'module',
     },
-    plugins: ['react', 'import', '@typescript-eslint', 'prettier'],
+    plugins: ['react', 'react-hooks', 'jsx-a11y', 'import', '@typescript-eslint', 'prettier'],
     rules: {
         quotes: ['warn', 'single', { allowTemplateLiterals: true }],
         'no-console': 'warn',

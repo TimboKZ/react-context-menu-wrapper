@@ -8,8 +8,10 @@
     "lib"
   ],
   "scripts": {
+    "start": "cd demo; npm start",
     "build:ts": "tsc",
     "build:all": "npm run build:ts; npm run build:sb",
+    "watch:ts": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",
@@ -36,15 +38,11 @@
     "react-component"
   ],
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.5.0",
-    "@typescript-eslint/parser": "^2.5.0",
-    "eslint": "^6.6.0",
-    "eslint-config-prettier": "^6.5.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-prettier": "^3.1.1",
-    "eslint-plugin-react": "^7.16.0",
-    "prettier": "^1.18.2",
-    "prop-types": "^15.7.2"
+    "@types/events": "^3.0.0",
+    "@types/shortid": "0.0.29",
+    "prop-types": "^15.7.2",
+    "react-base-hooks": "0.0.3",
+    "shortid": "^2.2.15"
   },
   "peerDependencies": {
     "react": "^16.8.0",
@@ -53,6 +51,16 @@
   "devDependencies": {
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.3",
+    "@typescript-eslint/eslint-plugin": "^2.5.0",
+    "@typescript-eslint/parser": "^2.5.0",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-hooks": "^2.2.0",
+    "prettier": "^1.18.2",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "tsdef": "0.0.13",
