@@ -97,32 +97,39 @@ div[class*='--preview-'] {
 }
 
 .banner {
+    box-shadow: inset rgba(0, 0, 0, 0.1) 0 0 0 1px;
     background-color: #a3eee3;
+    border-radius: 5px;
     line-height: 100px;
     text-align: center;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     color: #446156;
 }
 
 .box-container {
     flex-direction: row;
-    margin: 0 -10px;
     display: flex;
+    margin: -5px;
 }
 
 .box {
+    box-shadow: inset rgba(0, 0, 0, 0.1) 0 0 0 1px;
     background-color: #ffb7c6;
-    border: solid 1px #aaa;
     border-radius: 5px;
     text-align: center;
     line-height: 60px;
-    margin: 0 10px;
     color: #6c1426;
+    margin: 5px;
     flex: 1 1 0;
+}
+
+@media screen and (max-width: 400px) {
+    .box-container {
+        flex-direction: column;
+    }
 }
 
 .box-active {
     background-color: #a3eee3;
-    border: solid 1px #007d6a;
     color: #007d6a;
 }

@@ -56,7 +56,7 @@ module.exports = {
     sortProps: props => props,
     propsParser: (filePath, source, resolver, handlers) => {
         const result = require('react-docgen-typescript')
-            .withCustomConfig('./tsconfig.json')
+            .withCustomConfig('./tsconfig.json', { savePropValueAsString: true })
             .parse(filePath, source, resolver, handlers);
 
         return result.map(component => {
@@ -64,20 +64,11 @@ module.exports = {
             const mappedProps = Object.values(props).reduce((previous, prop) => {
                 const { name, type } = prop;
                 if (type.name.includes('| undefined')) {
-                    type.name = type.name.replace('| undefined', '');
+                    type.name = type.name.replace('| undefined', '').trim();
                     if (!prop.defaultValue) prop.defaultValue = { value: 'null' };
                     if (type.name.startsWith('(') && type.name.endsWith(')')) {
-                        type.name = type.name.slice(1, type.name.length - 2);
+                        type.name = type.name.slice(1, type.name.length - 1);
                     }
-                }
-                if (prop.defaultValue && prop.defaultValue.value.charAt(0) === '{') {
-                    let value = prop.defaultValue.value;
-                    value = value.replace(/(\n)+/g, '&');
-                    value = value.replace(/(\s)+/g, '|');
-                    value = value.replace(/:\|/g, ': ');
-                    value = value.replace(/&\|}/g, '\n}');
-                    value = value.replace(/&\|/g, '\n  ');
-                    prop.defaultValue.value = value;
                 }
 
                 return { ...previous, [name]: { ...prop } };
