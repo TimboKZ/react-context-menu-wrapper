@@ -15,8 +15,10 @@ const LocalMenuExample = () => {
             </div>
 
             <ContextMenuWrapper id={menuId}>
-                <div className="context-menu">
-                    <p>I am component-local context menu!</p>
+                <div className="context-menu" style={{ backgroundColor: '#d6fffc' }}>
+                    <p>
+                        I am <strong>component-local</strong> context menu!
+                    </p>
                 </div>
             </ContextMenuWrapper>
         </React.Fragment>

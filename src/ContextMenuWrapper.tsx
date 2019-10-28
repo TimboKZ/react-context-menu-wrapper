@@ -32,10 +32,13 @@ export const ContextMenuWrapper: React.FC<ContextMenuWrapperProps> = ({
     hideOnScroll,
     hideOnWindowResize,
 }) => {
+    const wrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const [lastShowMenuEvent, setShowMenuEvent] = useState<Nullable<ContextMenuEvent>>(null);
     const [placementStyle, setMenuPlacementStyle] = useState<Nullable<CSSProperties>>(null);
     const [showMenu, hideMenu] = useMenuToggleMethods(lastShowMenuEvent, setShowMenuEvent, onShow, onHide);
     useInternalHandlers(
+        wrapperRef,
+        lastShowMenuEvent,
         showMenu,
         hideMenu,
         id,
@@ -46,8 +49,7 @@ export const ContextMenuWrapper: React.FC<ContextMenuWrapperProps> = ({
         hideOnScroll,
         hideOnWindowResize
     );
-    const wrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-    useMenuPlacementStyle(lastShowMenuEvent, setMenuPlacementStyle, wrapperRef);
+    useMenuPlacementStyle(wrapperRef, lastShowMenuEvent, setMenuPlacementStyle);
 
     if (!lastShowMenuEvent) return null;
 

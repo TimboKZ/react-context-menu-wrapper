@@ -45,7 +45,7 @@ export const LocalMenuExample = () => {
 
     return (
         <React.Fragment>
-            // We attach `bannerRef` to the component that will trigger the context menu: 
+            {/* We attach `bannerRef` to the component that will trigger the context menu: */}
             <div ref={bannerRef} className="banner">Right click or long-press this box</div>
 
             <ContextMenuWrapper id={menuId}>

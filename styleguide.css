@@ -38,7 +38,7 @@ div[class*='--preview-'] {
 }
 
 .context-menu {
-    box-shadow: rgba(0, 0, 0, 0.2) 1px 2px 5px;
+    box-shadow: rgba(0, 0, 0, 0.1) 2px 2px 0;
     background-color: white;
     border: solid 1px #ccc;
     border-radius: 5px;
@@ -64,12 +64,12 @@ div[class*='--preview-'] {
 
 .context-menu button {
     border-top: solid 1px #ccc !important;
+    background-color: transparent;
     padding: 10px;
     width: 100%;
 }
 
 .context-menu button, .button {
-    background-color: #fff;
     font-size: inherit;
     cursor: pointer;
     color: #2f2f2f;
@@ -111,18 +111,18 @@ div[class*='--preview-'] {
 }
 
 .box {
-    background-color: #f2f2f2;
+    background-color: #ffb7c6;
     border: solid 1px #aaa;
     border-radius: 5px;
     text-align: center;
     line-height: 60px;
     margin: 0 10px;
-    color: #333;
+    color: #6c1426;
     flex: 1 1 0;
 }
 
 .box-active {
-    background-color: #acf2c7;
-    border: solid 1px #2f9361;
-    color: #255228;
+    background-color: #a3eee3;
+    border: solid 1px #007d6a;
+    color: #007d6a;
 }

@@ -1,5 +1,24 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ContextMenuWrapper } from 'react-context-menu-wrapper';
+
+const MyContextMenu = () => {
+    const [seconds, setSeconds] = useState(0);
+    useEffect(() => {
+        const timer = setInterval(() => setSeconds(s => s + 1), 1000);
+        return () => clearInterval(timer);
+    });
+
+    return (
+        <div className="context-menu">
+            <p>
+                I am a custom <strong>global</strong> context menu!
+            </p>
+            <p>
+                Open for {seconds} {seconds === 1 ? 'second' : 'seconds'}.
+            </p>
+        </div>
+    );
+};
 
 const GlobalMenuExample = () => {
     const [globalMenuEnabled, setGlobalMenuEnabled] = useState(true);
@@ -17,9 +36,7 @@ const GlobalMenuExample = () => {
 
             {globalMenuEnabled && (
                 <ContextMenuWrapper global={true}>
-                    <div className="context-menu">
-                        <p>I am a global context menu!</p>
-                    </div>
+                    <MyContextMenu />
                 </ContextMenuWrapper>
             )}
         </React.Fragment>

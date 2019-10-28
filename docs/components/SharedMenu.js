@@ -1,14 +1,15 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { ContextMenuWrapper, useContextMenuEvent, useContextMenuHandlers } from 'react-context-menu-wrapper';
 
-const MyContextMenu = ({ toggleSelection }) => {
+const MyContextMenu = ({ selection, toggleSelection }) => {
     const menuEvent = useContextMenuEvent();
     if (!menuEvent) return null;
 
     const name = menuEvent.data;
     const onClick = useCallback(() => (name ? toggleSelection(name) : null), [name, toggleSelection]);
+    const style = { backgroundColor: selection[name] ? '#d6fffc' : '#ffe4e4' };
     return (
-        <div className="context-menu">
+        <div className="context-menu" style={style}>
             <p>You chose {name ? name : 'no one'}.</p>
             <button onClick={onClick}>Toggle state</button>
         </div>
@@ -48,8 +49,8 @@ const SharedMenu = () => {
                     <Box key={name} name={name} selected={selection[name]} menuId={menuId} />
                 ))}
             </div>
-            <ContextMenuWrapper id={menuId}>
-                <MyContextMenu toggleSelection={toggleSelection} />
+            <ContextMenuWrapper id={menuId} hideOnSelfClick={false}>
+                <MyContextMenu selection={selection} toggleSelection={toggleSelection} />
             </ContextMenuWrapper>
         </div>
     );
