@@ -15,13 +15,6 @@ const styles = {
         '@global img': {
             maxWidth: '100%',
         },
-        '@global blockquote': {
-            padding: '16px 16px 1px 16px !important',
-            borderLeft: 'solid 4px #bbb !important',
-            backgroundColor: '#eee !important',
-            borderRadius: '3px !important',
-            margin: '1.5em 0 !important',
-        },
         '@global tbody > tr > td': {
             borderBottom: 'solid 1px #efefef !important',
         },
@@ -43,24 +36,6 @@ const styles = {
         },
     },
     Heading: {
-        heading1: {
-            borderBottom: 'solid 3px #ddd',
-            fontWeight: 'bold',
-            display: 'block',
-            marginBottom: 0,
-            marginTop: 50,
-            width: '100%',
-        },
-        heading2: {
-            borderBottom: 'solid 2px #ddd',
-            fontWeight: 'bold',
-            marginBottom: 20,
-            marginTop: 80,
-        },
-        heading3: {
-            fontWeight: 'bold',
-            marginTop: 40,
-        },
         heading4: {
             fontWeight: 'bold',
             marginTop: 30,

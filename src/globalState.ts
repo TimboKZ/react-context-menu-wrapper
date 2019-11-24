@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import shortid from 'shortid';
-import { Undefinable } from 'tsdef';
+import { Nullable, Undefinable } from 'tsdef';
 
 import { ContextMenuEvent, GlobalHandlers } from './handlers';
 import { warn } from './util';
@@ -16,87 +16,92 @@ export enum HideReason {
 export type EventListener = (data: any) => void;
 export type InternalHandler = (event: ContextMenuEvent) => void;
 
-declare global {
-    interface Window {
-        __ReactContextMenuWrapper: {
-            emitter: EventEmitter;
-            localMenuHandlers: { [externalId: string]: InternalHandler };
-            globalMenuHandlers: InternalHandler[];
-            dataMap: { [randomId: string]: string };
-        };
-    }
+interface ReactContextMenuWrapperState {
+    emitter: EventEmitter;
+    localMenuHandlers: { [menuId: string]: InternalHandler };
+    globalMenuHandlers: InternalHandler[];
+    longPressTimeout: Nullable<number>;
+    handlerDataMap: { [randomId: string]: any };
+}
+interface CustomWindow {
+    __ReactContextMenuWrapper: ReactContextMenuWrapperState;
 }
 
+let state: ReactContextMenuWrapperState;
 export const initWindowState = () => {
-    window.__ReactContextMenuWrapper = {
+    state = {
         emitter: new EventEmitter(),
         localMenuHandlers: {},
         globalMenuHandlers: [],
-        dataMap: {},
+        longPressTimeout: null,
+        handlerDataMap: {},
     };
+    ((window as any) as CustomWindow).__ReactContextMenuWrapper = state;
 
     document.body.addEventListener('contextmenu', GlobalHandlers.handleContextMenu);
+    document.body.addEventListener('touchstart', GlobalHandlers.handleTouchStart);
+    document.body.addEventListener('touchmove', GlobalHandlers.handleTouchMove);
+    document.body.addEventListener('touchend', GlobalHandlers.handleTouchEnd);
+    document.body.addEventListener('touchcancel', GlobalHandlers.handleTouchCancel);
 };
 export const hideAllMenus = () => {
-    const { emitter } = window.__ReactContextMenuWrapper;
-    emitter.emit(EventName.CloseAllMenus);
+    state.emitter.emit(EventName.CloseAllMenus);
 };
 
 export const addGenericListener = (name: EventName, listener: EventListener) => {
-    const { emitter } = window.__ReactContextMenuWrapper;
-    emitter.addListener(name, listener);
+    state.emitter.addListener(name, listener);
 };
 export const removeGenericListener = (name: EventName, listener: EventListener) => {
-    const { emitter } = window.__ReactContextMenuWrapper;
-    emitter.removeListener(name, listener);
+    state.emitter.removeListener(name, listener);
 };
 
 export const addLocalMenuHandler = (menuId: string, handler: InternalHandler) => {
-    const { localMenuHandlers } = window.__ReactContextMenuWrapper;
-    if (localMenuHandlers[menuId]) {
+    if (state.localMenuHandlers[menuId]) {
         warn(`Detected duplicate menu id: ${menuId}. Only the last one will be used.`);
     }
-    localMenuHandlers[menuId] = handler;
+    state.localMenuHandlers[menuId] = handler;
 };
 export const getLocalMenuHandler = (menuId: string): Undefinable<InternalHandler> => {
-    const { localMenuHandlers } = window.__ReactContextMenuWrapper;
-    return localMenuHandlers[menuId];
+    return state.localMenuHandlers[menuId];
 };
 export const removeLocalMenuHandler = (menuId: string) => {
-    const { localMenuHandlers } = window.__ReactContextMenuWrapper;
-    delete localMenuHandlers[menuId];
+    delete state.localMenuHandlers[menuId];
 };
 
 export const addGlobalMenuHandler = (handler: InternalHandler) => {
-    const { globalMenuHandlers } = window.__ReactContextMenuWrapper;
-    if (globalMenuHandlers.length > 0) {
+    if (state.globalMenuHandlers.length > 0) {
         warn('You have defined multiple global menus. Only the last one will be used');
     }
-    globalMenuHandlers.push(handler);
+    state.globalMenuHandlers.push(handler);
 };
 export const getGlobalMenuHandler = (): Undefinable<InternalHandler> => {
-    const { globalMenuHandlers } = window.__ReactContextMenuWrapper;
-    if (globalMenuHandlers.length <= 0) return undefined;
-    return globalMenuHandlers[globalMenuHandlers.length - 1];
+    if (state.globalMenuHandlers.length <= 0) return undefined;
+    return state.globalMenuHandlers[state.globalMenuHandlers.length - 1];
 };
 export const removeGlobalMenuHandler = (handler: InternalHandler) => {
-    const { globalMenuHandlers } = window.__ReactContextMenuWrapper;
-    const handlerIndex = globalMenuHandlers.indexOf(handler);
-    if (handlerIndex !== -1) globalMenuHandlers.splice(handlerIndex);
+    const handlerIndex = state.globalMenuHandlers.indexOf(handler);
+    if (handlerIndex !== -1) state.globalMenuHandlers.splice(handlerIndex);
 };
 
-export const generateDataId = (): string => shortid.generate();
-export const saveData = (dataId: string, data: any) => {
+export const addLongPressTimeout = (callback: () => void, timeout: number) => {
+    state.longPressTimeout = setTimeout(callback, timeout);
+};
+export const hasLongPressTimeout = () => typeof state.longPressTimeout === 'number';
+export const clearLongPressTimeout = () => {
+    const timeoutId = state.longPressTimeout;
+    if (timeoutId === null) return;
+    state.longPressTimeout = null;
+    clearTimeout(timeoutId);
+};
+
+export const generateHandlerDataId = (): string => shortid.generate();
+export const saveHandlerData = (dataId: string, data: any) => {
     if (data === undefined) return;
-
-    const { dataMap } = window.__ReactContextMenuWrapper;
-    dataMap[dataId] = data;
+    state.handlerDataMap[dataId] = data;
 };
-export const fetchData = (dataId: string) => {
-    const { dataMap } = window.__ReactContextMenuWrapper;
-    return dataMap[dataId];
+export const fetchHandlerData = (dataId: string) => {
+    return state.handlerDataMap[dataId];
 };
-export const deleteData = (dataId: string) => {
-    const { dataMap } = window.__ReactContextMenuWrapper;
-    delete dataMap[dataId];
+export const deleteHandlerData = (dataId: string) => {
+    delete state.handlerDataMap[dataId];
 };

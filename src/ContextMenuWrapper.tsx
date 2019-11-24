@@ -49,52 +49,56 @@ export interface ContextMenuWrapperProps {
     hideOnWindowResize?: boolean;
 }
 
-export const ContextMenuWrapper: React.FC<ContextMenuWrapperProps> = ({
-    id,
-    global,
-    children,
-    onShow,
-    onHide,
-    hideOnSelfClick,
-    hideOnOutsideClick,
-    hideOnEscape,
-    hideOnScroll,
-    hideOnWindowResize,
-}) => {
-    const wrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-    const [lastShowMenuEvent, setShowMenuEvent] = useState<Nullable<ContextMenuEvent>>(null);
-    const [placementStyle, setMenuPlacementStyle] = useState<Nullable<CSSProperties>>(null);
-    const [showMenu, hideMenu] = useMenuToggleMethods(lastShowMenuEvent, setShowMenuEvent, onShow, onHide);
-    useInternalHandlers(
-        wrapperRef,
-        lastShowMenuEvent,
-        showMenu,
-        hideMenu,
+export const ContextMenuWrapper: React.FC<ContextMenuWrapperProps> = React.memo(
+    ({
         id,
         global,
+        children,
+        onShow,
+        onHide,
         hideOnSelfClick,
         hideOnOutsideClick,
         hideOnEscape,
         hideOnScroll,
-        hideOnWindowResize
-    );
-    useMenuPlacementStyle(wrapperRef, lastShowMenuEvent, setMenuPlacementStyle);
+        hideOnWindowResize,
+    }) => {
+        const wrapperRef = useRef() as React.MutableRefObject<HTMLInputElement>;
+        const [lastShowMenuEvent, setShowMenuEvent] = useState<Nullable<ContextMenuEvent>>(null);
+        const [placementStyle, setMenuPlacementStyle] = useState<Nullable<CSSProperties>>(null);
+        const [showMenu, hideMenu] = useMenuToggleMethods(lastShowMenuEvent, setShowMenuEvent, onShow, onHide);
+        useInternalHandlers(
+            wrapperRef,
+            lastShowMenuEvent,
+            showMenu,
+            hideMenu,
+            id,
+            global,
+            hideOnSelfClick,
+            hideOnOutsideClick,
+            hideOnEscape,
+            hideOnScroll,
+            hideOnWindowResize
+        );
+        useMenuPlacementStyle(wrapperRef, lastShowMenuEvent, setMenuPlacementStyle);
 
-    if (!lastShowMenuEvent) return null;
+        if (!lastShowMenuEvent) return null;
 
-    const style: CSSProperties = {
-        position: 'fixed',
-        zIndex: 999,
-        left: -9999,
-        top: -9999,
-        ...placementStyle,
-    };
-    return (
-        <div ref={wrapperRef} style={style}>
-            <ContextMenuEventContext.Provider value={lastShowMenuEvent}>{children}</ContextMenuEventContext.Provider>
-        </div>
-    );
-};
+        const style: CSSProperties = {
+            position: 'fixed',
+            zIndex: 999,
+            left: -9999,
+            top: -9999,
+            ...placementStyle,
+        };
+        return (
+            <div ref={wrapperRef} style={style}>
+                <ContextMenuEventContext.Provider value={lastShowMenuEvent}>
+                    {children}
+                </ContextMenuEventContext.Provider>
+            </div>
+        );
+    }
+);
 
 ContextMenuWrapper.defaultProps = {
     id: undefined,

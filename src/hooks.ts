@@ -5,13 +5,13 @@ import {
     addGenericListener,
     addGlobalMenuHandler,
     addLocalMenuHandler,
-    deleteData,
+    deleteHandlerData,
     EventName,
-    generateDataId,
+    generateHandlerDataId,
     removeGenericListener,
     removeGlobalMenuHandler,
     removeLocalMenuHandler,
-    saveData,
+    saveHandlerData,
 } from './globalState';
 import { ContextMenuEvent, DataAttributes, LocalHandlers } from './handlers';
 import { determineMenuPlacement, warn } from './util';
@@ -32,11 +32,11 @@ export const useContextMenuHandlers = (
     ref: React.RefObject<HTMLElement>,
     { id, data }: { id?: string; data?: any }
 ): void => {
-    const dataId = useLazyValue(() => generateDataId());
+    const dataId = useLazyValue(() => generateHandlerDataId());
 
     useEffect(() => {
-        saveData(dataId, data);
-        return () => deleteData(dataId);
+        saveHandlerData(dataId, data);
+        return () => deleteHandlerData(dataId);
     }, [data]);
 
     useEffect(() => {
@@ -46,11 +46,19 @@ export const useContextMenuHandlers = (
         if (id) current.setAttribute(DataAttributes.MenuId, id);
         current.setAttribute(DataAttributes.DataId, dataId);
         current.addEventListener('contextmenu', LocalHandlers.handleContextMenu);
+        current.addEventListener('touchstart', LocalHandlers.handleTouchStart);
+        current.addEventListener('touchmove', LocalHandlers.handleTouchMove);
+        current.addEventListener('touchend', LocalHandlers.handleTouchEnd);
+        current.addEventListener('touchcancel', LocalHandlers.handleTouchCancel);
 
         return () => {
             current.removeAttribute(DataAttributes.MenuId);
             current.removeAttribute(DataAttributes.DataId);
             current.removeEventListener('contextmenu', LocalHandlers.handleContextMenu);
+            current.removeEventListener('touchstart', LocalHandlers.handleTouchStart);
+            current.removeEventListener('touchmove', LocalHandlers.handleTouchMove);
+            current.removeEventListener('touchend', LocalHandlers.handleTouchEnd);
+            current.removeEventListener('touchcancel', LocalHandlers.handleTouchCancel);
         };
     }, [ref.current]);
 };
@@ -66,13 +74,13 @@ export const useMenuToggleMethods = (
             setShowMenuEvent(event);
             if (onShow) onShow(event);
         },
-        [onShow]
+        [setShowMenuEvent, onShow]
     );
     const hideMenu = useCallback(() => {
         if (lastShowMenuEvent === null) return;
         setShowMenuEvent(null);
         if (onHide) onHide();
-    }, [lastShowMenuEvent, onHide]);
+    }, [lastShowMenuEvent, setShowMenuEvent, onHide]);
     return [showMenu, hideMenu];
 };
 
@@ -87,10 +95,9 @@ export const useMenuPlacementStyle = (
 
             let menuWidth = 200;
             let menuHeight = 200;
-            const { current } = wrapperRef;
-            if (current) {
-                menuWidth = current.offsetWidth;
-                menuHeight = current.offsetHeight;
+            if (wrapperRef.current) {
+                menuWidth = wrapperRef.current.offsetWidth;
+                menuHeight = wrapperRef.current.offsetHeight;
             }
 
             setMenuPlacementStyle(determineMenuPlacement(clientX, clientY, menuWidth, menuHeight));
@@ -141,6 +148,7 @@ export const useInternalHandlers = (
     useEffect(() => {
         document.addEventListener('click', handleClick);
         document.addEventListener('touchstart', handleClick);
+
         if (hideOnEscape) document.addEventListener('keydown', handleKeydown);
         if (hideOnScroll) document.addEventListener('scroll', hideMenu);
         if (hideOnWindowResize) window.addEventListener('resize', hideMenu);

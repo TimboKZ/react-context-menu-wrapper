@@ -25,9 +25,15 @@ module.exports = {
         {
             name: 'Documentation',
             sections: [
+                { name: 'Introduction', content: 'docs/markdown/0-Introduction.md' },
                 { name: 'Installation', content: 'docs/markdown/1-Installation.md' },
-                { name: 'Basic context menus', content: 'docs/markdown/2-Basic-menus.md' },
-                { name: 'Shared context menu', content: 'docs/markdown/3-Shared-menu.md' },
+                { name: 'Global context menu', content: 'docs/markdown/2-Global-menu.md' },
+                { name: 'Local context menu', content: 'docs/markdown/3-Local-menu.md' },
+                { name: 'Shared menu logic', content: 'docs/markdown/4-Shared-menu.md' },
+                {
+                    name: 'Toggling menus programmatically',
+                    content: 'docs/markdown/5-Toggle-menus-programmatically.md',
+                },
                 { name: 'Styles used on this page', content: 'docs/Not-available.md' },
             ],
         },

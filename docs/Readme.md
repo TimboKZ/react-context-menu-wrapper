@@ -16,14 +16,7 @@ React Context Menu Wrapper
   </a>
 </div>
 
-This library provides a simple wrapper for your context menus. It handles user interaction on desktop and mobile
-devices, and guarantees correct context menu positioning.
-
-In an effort to stay unopinionated, this library does not provide any styling or additional components. It is up to you
-define your own styles and logic for the menu. This is useful when your CSS framework already provides dropdown menu
-styling (e.g. [Bulma](https://bulma.io/), [Bootstrap](https://getbootstrap.com/)) or when you need to implement some
-non-trivial logic for your context menu (e.g. [Ogma context menus](https://github.com/TimboKZ/Ogma) with tagging
-support).
+#### [View on Github](https://github.com/TimboKZ/react-context-menu-wrapper)
 
 > **Important:** React Context Menu Wrapper v3+ uses [React hooks](https://reactjs.org/docs/hooks-intro.html) and
 functional components. If your project does not support them, consider using v2 or below.
@@ -32,5 +25,3 @@ functional components. If your project does not support them, consider using v2 
 
 > **Note:** You can view source code of all examples on this page - just click the "View Code" button below the 
 relevant example.
-
-#### [View on Github](https://github.com/TimboKZ/react-context-menu-wrapper)

@@ -1,14 +1,74 @@
-/*body * {*/
-/*    border: solid 1px #000 !important;*/
-/*}*/
+/* Main container */
+main {
+    max-width: 860px !important;
+    padding: 40px !important;
+    margin: 0 !important;
+}
 
-article > div > pre {
-    overflow-x: auto !important;
+@media screen and (max-width: 400px) {
+    main {
+        padding: 20px !important;
+    }
+}
+
+/* Headings */
+main h1 {
+    display: none !important;
+}
+
+main > section > section:first-child > article h1 {
+    display: block !important;
+    font-weight: bold;
+    font-size: 36px;
+}
+
+main h2 {
+    border-left: solid 20px #ccc !important;
+    margin: 20px 0 20px -40px !important;
+    padding-left: 20px !important;
+    font-weight: bold !important;
+    font-size: 28px !important;
+    flex: 1 1 auto;
+}
+
+@media screen and (max-width: 400px) {
+    main h2 {
+        margin-left: -20px !important;
+    }
+}
+
+main h3 {
+    font-weight: bold !important;
+    font-size: 20px !important;
+}
+
+/* Paragraphs */
+article > div > p {
+    margin-bottom: 16px !important;
+    text-align: justify !important;
+    line-height: 24px !important;
+    font-size: 16px !important;
+}
+
+
+article > div > pre, article > div > blockquote > pre {
+    background-color: #f2f2f2 !important;
+    border: solid 1px #ccc !important;
+    border-radius: 0 !important;
     white-space: pre !important;
+    overflow-x: auto !important;
+}
+
+/* Content */
+blockquote {
+    border-left: solid 3px #b188f6 !important;
+    padding: 16px 16px 2px 16px !important;
+    background-color: #faf0ff !important;
+    margin: 16px 0 !important;
 }
 
 li {
-    margin-bottom: 10px !important;
+    margin-bottom: 5px !important;
 }
 
 code {
@@ -19,30 +79,44 @@ code {
     padding: 0 4px !important;
 }
 
-div[class*='--preview-'] {
-    padding: 8px;
+/* Misc */
+a[title*='Open isolated'] {
+    display: none;
 }
 
-@media screen and (max-width: 400px) {
+div[class*='--preview-'] {
+    border: solid 3px #b188f6;
+    margin: 25px 0 0 0;
+    position: relative;
+    border-radius: 0;
+    padding: 10px;
+}
 
-    div[class*='--preview-'] {
-        border-right: none;
-        border-left: none;
-        border-radius: 0;
-        margin: 0 -16px;
-        display: block;
-        padding: 5px;
-        width: auto;
-    }
-
+div[class*='--preview-']:before {
+    background-color: #b188f6;
+    content: 'Live Example';
+    position: absolute;
+    font-weight: bold;
+    line-height: 25px;
+    font-size: 14px;
+    padding: 0 8px;
+    display: block;
+    height: 25px;
+    color: #fff;
+    left: -3px;
+    top: -25px;
 }
 
 .context-menu {
-    box-shadow: rgba(0, 0, 0, 0.1) 2px 2px 0;
-    background-color: white;
-    border: solid 1px #ccc;
-    border-radius: 5px;
+    box-shadow: inset rgba(0, 0, 0, 0.2) 0 0 0 1px, rgba(0, 0, 0, 0.4) 0 3px 3px;
+    background-color: #e1e1f9;
     width: 200px;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .context-menu *:first-child {
@@ -63,7 +137,7 @@ div[class*='--preview-'] {
 }
 
 .context-menu button {
-    border-top: solid 1px #ccc !important;
+    border-top: solid 1px rgba(0, 0, 0, 0.2) !important;
     background-color: transparent;
     padding: 10px;
     width: 100%;
@@ -91,7 +165,6 @@ div[class*='--preview-'] {
 
 .button {
     background-color: #00c4a7;
-    border-radius: 5px;
     padding: 10px 20px;
     color: #fff;
 }
@@ -99,11 +172,16 @@ div[class*='--preview-'] {
 .banner {
     box-shadow: inset rgba(0, 0, 0, 0.1) 0 0 0 1px;
     background-color: #a3eee3;
-    border-radius: 5px;
     line-height: 100px;
     text-align: center;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     color: #446156;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .box-container {
@@ -115,12 +193,17 @@ div[class*='--preview-'] {
 .box {
     box-shadow: inset rgba(0, 0, 0, 0.1) 0 0 0 1px;
     background-color: #ffb7c6;
-    border-radius: 5px;
     text-align: center;
     line-height: 60px;
     color: #6c1426;
     margin: 5px;
     flex: 1 1 0;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 @media screen and (max-width: 400px) {
