@@ -2,10 +2,10 @@ export declare enum DataAttributes {
     MenuId = "data-contextmenu-menu-id",
     DataId = "data-contextmenu-data-id"
 }
-export interface ContextMenuEvent {
+export interface ContextMenuEvent<DataType = any> {
     clientX: number;
     clientY: number;
-    data: any;
+    data: DataType;
 }
 export declare const GlobalHandlers: {
     readonly handleContextMenu: (e: MouseEvent) => void;

@@ -16,10 +16,10 @@ export enum DataAttributes {
     DataId = 'data-contextmenu-data-id',
 }
 
-export interface ContextMenuEvent {
+export interface ContextMenuEvent<DataType = any> {
     clientX: number;
     clientY: number;
-    data: any;
+    data: DataType; // user-defined data
 }
 
 type ContextMenuTarget = EventTarget & Element;

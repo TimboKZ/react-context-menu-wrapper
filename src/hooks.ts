@@ -24,14 +24,14 @@ export const useLazyValue = <T>(factory: () => T): T => {
 };
 
 export const ContextMenuEventContext = React.createContext<Nullable<ContextMenuEvent>>(null);
-export const useContextMenuEvent = (): Nullable<ContextMenuEvent> => {
+export const useContextMenuEvent = <DataType = any>(): Nullable<ContextMenuEvent<DataType>> => {
     return useContext(ContextMenuEventContext);
 };
 
 export const useContextMenuTrigger = <RefType extends HTMLElement>(
-    parameters: { id?: string; data?: any, ref?: React.RefObject<RefType> },
+    parameters: { menuId?: string; data?: any, ref?: React.RefObject<RefType> },
 ): React.RefObject<RefType> => {
-    const {id, data} = parameters;
+    const {menuId, data} = parameters;
 
     // If user did not provide a ref, we simply generate a new one.
     const ref = parameters.ref ? parameters.ref : useRef<RefType>(null);
@@ -48,7 +48,7 @@ export const useContextMenuTrigger = <RefType extends HTMLElement>(
         const {current} = ref;
         if (!current) return;
 
-        if (id) current.setAttribute(DataAttributes.MenuId, id);
+        if (menuId) current.setAttribute(DataAttributes.MenuId, menuId);
         current.setAttribute(DataAttributes.DataId, dataId);
         current.addEventListener('contextmenu', LocalHandlers.handleContextMenu);
         current.addEventListener('touchstart', LocalHandlers.handleTouchStart);
