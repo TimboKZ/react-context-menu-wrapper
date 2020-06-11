@@ -1,15 +1,97 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Chonky 0.2.5</title>
-    <link rel="shortcut icon" type="image/png" href="./favicon.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Code&display=swap">
-  </head>
-  <body>
-    <div id="rsg-root"></div>
-    <script src="build/bundle.8ec4100f.js"></script>
-  </body>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>React Context Menu Wrapper library</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"/>
+    <link rel="stylesheet" href="./v2/index.css"/>
+</head>
+<body>
+    <div class="container">
+        <div class="title is-2">
+            <span style="vertical-align: middle; margin-right: 10px;">React Context Menu Wrapper</span>
+            <div style="display: inline-block; padding-top: 5px; vertical-align: middle;">
+                <iframe src="https://ghbtns.com/github-btn.html?user=TimboKZ&repo=react-context-menu-wrapper&type=star&count=true&size=large"
+                        frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+            </div>
+        </div>
+
+        <br/>
+        <div class="content ">
+            <p class="is-size-5-desktop is-size-6-mobile">
+                This library provides a simple wrapper for your context menus. It handles user interaction on desktop
+                and mobile devices, and guarantees correct context menu positioning.
+            </p>
+            <p class="is-size-5-desktop is-size-6-mobile">
+                <strong>Links:</strong>
+            </p>
+            <ul class="is-size-5-desktop is-size-6-mobile">
+                <li><a href="v3/">v3 Documentation - latest version using React hooks</a></li>
+                <li><a href="v2/">v2 Documentation - legacy pre-hooks version</a></li>
+                <li><a href="#shared-example">Project's GitHub page</a></li>
+                <li><a href="#nested-example">Project's NPM page</a></li>
+            </ul>
+        </div>
+    </div>
+    <script>!function (e) {
+        function r(r) {
+            for (var n, f, i = r[0], l = r[1], a = r[2], c = 0, s = []; c < i.length; c++) f = i[c], o[f] && s.push(o[f][0]), o[f] = 0;
+            for (n in l) Object.prototype.hasOwnProperty.call(l, n) && (e[n] = l[n]);
+            for (p && p(r); s.length;) s.shift()();
+            return u.push.apply(u, a || []), t()
+        }
+
+        function t() {
+            for (var e, r = 0; r < u.length; r++) {
+                for (var t = u[r], n = !0, i = 1; i < t.length; i++) {
+                    var l = t[i];
+                    0 !== o[l] && (n = !1)
+                }
+                n && (u.splice(r--, 1), e = f(f.s = t[0]))
+            }
+            return e
+        }
+
+        var n = {}, o = {1: 0}, u = [];
+
+        function f(r) {
+            if (n[r]) return n[r].exports;
+            var t = n[r] = {i: r, l: !1, exports: {}};
+            return e[r].call(t.exports, t, t.exports, f), t.l = !0, t.exports
+        }
+
+        f.m = e, f.c = n, f.d = function (e, r, t) {
+            f.o(e, r) || Object.defineProperty(e, r, {enumerable: !0, get: t})
+        }, f.r = function (e) {
+            "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(e, Symbol.toStringTag, {value: "Module"}), Object.defineProperty(e, "__esModule", {value: !0})
+        }, f.t = function (e, r) {
+            if (1 & r && (e = f(e)), 8 & r) return e;
+            if (4 & r && "object" == typeof e && e && e.__esModule) return e;
+            var t = Object.create(null);
+            if (f.r(t), Object.defineProperty(t, "default", {
+                enumerable: !0,
+                value: e
+            }), 2 & r && "string" != typeof e) for (var n in e) f.d(t, n, function (r) {
+                return e[r]
+            }.bind(null, n));
+            return t
+        }, f.n = function (e) {
+            var r = e && e.__esModule ? function () {
+                return e.default
+            } : function () {
+                return e
+            };
+            return f.d(r, "a", r), r
+        }, f.o = function (e, r) {
+            return Object.prototype.hasOwnProperty.call(e, r)
+        }, f.p = "";
+        var i = window.webpackJsonp = window.webpackJsonp || [], l = i.push.bind(i);
+        i.push = r, i = i.slice();
+        for (var a = 0; a < i.length; a++) r(i[a]);
+        var p = l;
+        t()
+    }([]);</script>
+</body>
 </html>
