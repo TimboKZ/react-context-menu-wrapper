@@ -1,5 +1,5 @@
-import React, { CSSProperties, useCallback, useContext, useEffect, useRef } from 'react';
-import { Nullable } from 'tsdef';
+import React, {CSSProperties, useCallback, useContext, useEffect, useRef} from 'react';
+import {Nullable} from 'tsdef';
 
 import {
     addGenericListener,
@@ -13,8 +13,8 @@ import {
     removeLocalMenuHandler,
     saveHandlerData,
 } from './globalState';
-import { ContextMenuEvent, DataAttributes, LocalHandlers } from './handlers';
-import { determineMenuPlacement, warn } from './util';
+import {ContextMenuEvent, DataAttributes, LocalHandlers} from './handlers';
+import {determineMenuPlacement, warn} from './util';
 
 const UNINITIALIZED_SENTINEL = {};
 export const useLazyValue = <T>(factory: () => T): T => {
@@ -28,10 +28,15 @@ export const useContextMenuEvent = (): Nullable<ContextMenuEvent> => {
     return useContext(ContextMenuEventContext);
 };
 
-export const useContextMenuHandlers = (
-    ref: React.RefObject<HTMLElement>,
-    { id, data }: { id?: string; data?: any }
-): void => {
+export const useContextMenuTrigger = <RefType extends HTMLElement>(
+    parameters: { id?: string; data?: any, ref?: React.RefObject<RefType> },
+): React.RefObject<RefType> => {
+    const {id, data} = parameters;
+
+    // If user did not provide a ref, we simply generate a new one.
+    const ref = parameters.ref ? parameters.ref : useRef<RefType>(null);
+
+    // Define data ID to be constant throughout the lifetime of the trigger.
     const dataId = useLazyValue(() => generateHandlerDataId());
 
     useEffect(() => {
@@ -40,7 +45,7 @@ export const useContextMenuHandlers = (
     }, [data]);
 
     useEffect(() => {
-        const { current } = ref;
+        const {current} = ref;
         if (!current) return;
 
         if (id) current.setAttribute(DataAttributes.MenuId, id);
@@ -61,20 +66,22 @@ export const useContextMenuHandlers = (
             current.removeEventListener('touchcancel', LocalHandlers.handleTouchCancel);
         };
     }, [ref.current]);
+
+    return ref;
 };
 
 export const useMenuToggleMethods = (
     lastShowMenuEvent: Nullable<ContextMenuEvent>,
     setShowMenuEvent: (event: Nullable<ContextMenuEvent>) => void,
     onShow?: (event: ContextMenuEvent) => void,
-    onHide?: () => void
+    onHide?: () => void,
 ): [(event: ContextMenuEvent) => void, () => void] => {
     const showMenu = useCallback(
         (event: ContextMenuEvent) => {
             setShowMenuEvent(event);
             if (onShow) onShow(event);
         },
-        [setShowMenuEvent, onShow]
+        [setShowMenuEvent, onShow],
     );
     const hideMenu = useCallback(() => {
         if (lastShowMenuEvent === null) return;
@@ -87,11 +94,11 @@ export const useMenuToggleMethods = (
 export const useMenuPlacementStyle = (
     wrapperRef: React.RefObject<HTMLElement>,
     lastShowMenuEvent: Nullable<ContextMenuEvent>,
-    setMenuPlacementStyle: (style: Nullable<CSSProperties>) => void
+    setMenuPlacementStyle: (style: Nullable<CSSProperties>) => void,
 ) => {
     useEffect(() => {
         if (lastShowMenuEvent) {
-            const { clientX, clientY } = lastShowMenuEvent;
+            const {clientX, clientY} = lastShowMenuEvent;
 
             let menuWidth = 200;
             let menuHeight = 200;
@@ -118,7 +125,7 @@ export const useInternalHandlers = (
     hideOnOutsideClick?: boolean,
     hideOnEscape?: boolean,
     hideOnScroll?: boolean,
-    hideOnWindowResize?: boolean
+    hideOnWindowResize?: boolean,
 ) => {
     const isVisible = !!lastShowMenuEvent;
     const handleClick = useCallback(
@@ -134,7 +141,7 @@ export const useInternalHandlers = (
                 else hideMenu();
             }
         },
-        [hideMenu, isVisible, wrapperRef.current, hideOnSelfClick, hideOnOutsideClick]
+        [hideMenu, isVisible, wrapperRef.current, hideOnSelfClick, hideOnOutsideClick],
     );
     const handleKeydown = useCallback(
         (event: KeyboardEvent) => {
@@ -142,7 +149,7 @@ export const useInternalHandlers = (
             // Hide on escape
             if (event.key === 'Escape' || event.code === 'Escape') hideMenu();
         },
-        [hideMenu, isVisible]
+        [hideMenu, isVisible],
     );
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-import { Nullable } from 'tsdef';
+import {Nullable} from 'tsdef';
 import {
     addLongPressTimeout,
     clearLongPressTimeout,
@@ -16,12 +16,7 @@ export enum DataAttributes {
     DataId = 'data-contextmenu-data-id',
 }
 
-export enum ContextMenuEventType {
-    Show = 'Show',
-    Hide = 'Hide',
-}
 export interface ContextMenuEvent {
-    type: ContextMenuEventType;
     clientX: number;
     clientY: number;
     data: any;
@@ -32,7 +27,7 @@ type ContextMenuTarget = EventTarget & Element;
 const isTouchEvent = (event: any): event is TouchEvent => {
     return !!event.targetTouches;
 };
-const createMenuEvent = (type: ContextMenuEventType, event: MouseEvent | TouchEvent, data: any): ContextMenuEvent => {
+const createMenuEvent = (event: MouseEvent | TouchEvent, data: any): ContextMenuEvent => {
     let clientX;
     let clientY;
     if (isTouchEvent(event)) {
@@ -45,7 +40,6 @@ const createMenuEvent = (type: ContextMenuEventType, event: MouseEvent | TouchEv
     }
 
     return {
-        type,
         clientX,
         clientY,
         data,
@@ -63,6 +57,9 @@ const getData = (target: Nullable<ContextMenuTarget>) => {
 
 const GenericHandlers = {
     handleContextMenu: (event: MouseEvent, target: Nullable<ContextMenuTarget>) => {
+        // When menus are triggered using Ctrl + Right Click, we bring up the native context menu.
+        if (event.ctrlKey) return;
+
         const menuId = target ? target.getAttribute(DataAttributes.MenuId) : null;
         const handler = menuId ? getLocalMenuHandler(menuId) : getGlobalMenuHandler();
         if (!handler) return;
@@ -71,7 +68,7 @@ const GenericHandlers = {
         event.stopPropagation();
 
         const data = getData(target);
-        const menuEvent = createMenuEvent(ContextMenuEventType.Show, event, data);
+        const menuEvent = createMenuEvent(event, data);
 
         hideAllMenus();
         handler(menuEvent);
@@ -82,7 +79,7 @@ const GenericHandlers = {
         if (!handler || hasLongPressTimeout()) return;
 
         const data = getData(target);
-        const menuEvent = createMenuEvent(ContextMenuEventType.Show, event, data);
+        const menuEvent = createMenuEvent(event, data);
         addLongPressTimeout(() => {
             clearLongPressTimeout();
             hideAllMenus();

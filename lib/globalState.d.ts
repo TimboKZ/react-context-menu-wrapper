@@ -1,4 +1,3 @@
-import { EventEmitter } from 'events';
 import { Undefinable } from 'tsdef';
 import { ContextMenuEvent } from './handlers';
 export declare enum EventName {
@@ -11,20 +10,6 @@ export declare enum HideReason {
 }
 export declare type EventListener = (data: any) => void;
 export declare type InternalHandler = (event: ContextMenuEvent) => void;
-declare global {
-    interface Window {
-        __ReactContextMenuWrapper: {
-            emitter: EventEmitter;
-            localMenuHandlers: {
-                [externalId: string]: InternalHandler;
-            };
-            globalMenuHandlers: InternalHandler[];
-            dataMap: {
-                [randomId: string]: string;
-            };
-        };
-    }
-}
 export declare const initWindowState: () => void;
 export declare const hideAllMenus: () => void;
 export declare const addGenericListener: (name: EventName, listener: EventListener) => void;
@@ -35,7 +20,10 @@ export declare const removeLocalMenuHandler: (menuId: string) => void;
 export declare const addGlobalMenuHandler: (handler: InternalHandler) => void;
 export declare const getGlobalMenuHandler: () => Undefinable<InternalHandler>;
 export declare const removeGlobalMenuHandler: (handler: InternalHandler) => void;
-export declare const generateDataId: () => string;
-export declare const saveData: (dataId: string, data: any) => void;
-export declare const fetchData: (dataId: string) => string;
-export declare const deleteData: (dataId: string) => void;
+export declare const addLongPressTimeout: (callback: () => void, timeout: number) => void;
+export declare const hasLongPressTimeout: () => boolean;
+export declare const clearLongPressTimeout: () => void;
+export declare const generateHandlerDataId: () => string;
+export declare const saveHandlerData: (dataId: string, data: any) => void;
+export declare const fetchHandlerData: (dataId: string) => any;
+export declare const deleteHandlerData: (dataId: string) => void;
