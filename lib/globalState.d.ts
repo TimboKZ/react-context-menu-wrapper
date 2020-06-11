@@ -1,3 +1,8 @@
+/**
+ * @author Timur Kuzhagaliyev <tim.kuzh@gmail.com>
+ * @copyright 2020
+ * @license MIT
+ */
 import { Undefinable } from 'tsdef';
 import { ContextMenuEvent } from './handlers';
 export declare enum EventName {

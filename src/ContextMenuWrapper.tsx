@@ -1,3 +1,9 @@
+/**
+ * @author Timur Kuzhagaliyev <tim.kuzh@gmail.com>
+ * @copyright 2020
+ * @license MIT
+ */
+
 import React, { CSSProperties, useRef, useState } from 'react';
 import { Nullable } from 'tsdef';
 

@@ -1,3 +1,9 @@
+/**
+ * @author Timur Kuzhagaliyev <tim.kuzh@gmail.com>
+ * @copyright 2020
+ * @license MIT
+ */
+
 export const warn = (...args: any[]) => {
     const parts: any = [`[react-context-menu-wrapper]`].concat(args);
     // eslint-disable-next-line no-console

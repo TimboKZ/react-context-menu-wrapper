@@ -1,3 +1,8 @@
+/**
+ * @author Timur Kuzhagaliyev <tim.kuzh@gmail.com>
+ * @copyright 2020
+ * @license MIT
+ */
 export declare enum DataAttributes {
     MenuId = "data-contextmenu-menu-id",
     DataId = "data-contextmenu-data-id"

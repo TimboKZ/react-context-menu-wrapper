@@ -1,3 +1,9 @@
+/**
+ * @author Timur Kuzhagaliyev <tim.kuzh@gmail.com>
+ * @copyright 2020
+ * @license MIT
+ */
+
 import { EventEmitter } from 'events';
 import shortid from 'shortid';
 import { Nullable, Undefinable } from 'tsdef';
