@@ -13,7 +13,7 @@ module.exports = {
     title: `React Context Menu Wrapper ${version}`,
 
     assetsDir: 'assets',
-    styleguideDir: 'public',
+    styleguideDir: 'public/v3',
     require: [path.join(__dirname, 'styleguide.css')],
 
     usageMode: 'expand',
@@ -25,21 +25,28 @@ module.exports = {
         {
             name: 'Documentation',
             sections: [
-                { name: 'Introduction', content: 'docs/markdown/0-Introduction.md' },
-                { name: 'Installation', content: 'docs/markdown/1-Installation.md' },
-                { name: 'Global context menu', content: 'docs/markdown/2-Global-menu.md' },
-                { name: 'Local context menu', content: 'docs/markdown/3-Local-menu.md' },
-                { name: 'Shared menu logic', content: 'docs/markdown/4-Shared-menu.md' },
+                { name: 'Introduction', content: 'docs/markdown/00-Introduction.md' },
+                { name: 'Quick demo', content: 'docs/markdown/01-Quick-demo.md' },
+                { name: 'Installation', content: 'docs/markdown/02-Installation.md' },
+                { name: 'Global context menu', content: 'docs/markdown/03-Global-menu.md' },
+                { name: 'Local context menu', content: 'docs/markdown/04-Local-menu.md' },
+                { name: 'Shared menu logic', content: 'docs/markdown/05-Shared-menu.md' },
                 {
                     name: 'Toggling menus programmatically',
-                    content: 'docs/markdown/5-Toggle-menus-programmatically.md',
+                    content: 'docs/markdown/06-Toggle-menus-programmatically.md',
                 },
-                { name: 'Styles used on this page', content: 'docs/Not-available.md' },
+                { name: 'Styles used on this page', content: 'docs/markdown/07-Styles.md' },
             ],
         },
         {
             name: 'Components',
             components: 'src/ContextMenuWrapper.tsx',
+            exampleMode: 'expand',
+            usageMode: 'expand',
+        },
+        {
+            name: 'Hooks',
+            components: 'src/hooks.tsx',
             exampleMode: 'expand',
             usageMode: 'expand',
         },
@@ -100,25 +107,22 @@ module.exports = {
             // Use lower case, since settings are converted to lowercase for some reason...
             props.settings.displaycontent = fs.readFileSync(filePath, 'utf8');
             return props;
+        } else if (typeof settings.typeName === 'string') {
+            const content = typeExtractor(settings);
+            if (!content.trim()) throw new Error(`Could not find type ${settings.typeName}!`);
+            const props = {
+                content,
+                settings,
+                lang: 'typescript',
+            };
+            props.settings.static = true;
+            return props;
         } else if (typeof settings.filePath === 'string') {
             const filePath = path.resolve(exampleDir, settings.filePath);
             const props = {
                 content: fs.readFileSync(filePath, 'utf8'),
                 settings,
                 lang,
-            };
-            props.settings.static = true;
-            return props;
-        } else if (typeof settings.typeName === 'string') {
-            const content = typeExtractor({
-                typeName: settings.typeName,
-                offset: settings.offset,
-            });
-            if (!content.trim()) throw new Error(`Could not find type ${settings.typeName}!`);
-            const props = {
-                content,
-                settings,
-                lang: 'typescript',
             };
             props.settings.static = true;
             return props;

@@ -14,6 +14,8 @@ const MyContextMenu = React.memo(() => {
                 This is a <strong>global</strong> menu.
                 <div style={{ height: 10 }} />
                 Open for {seconds.toFixed(1)} {seconds === 1 ? 'second' : 'seconds'}.
+                <div style={{ height: 10 }} />
+                Use Ctrl+Right Click to bring up browser's native menu.
             </p>
             <button>Dummy button #1</button>
             <button>Dummy button #2</button>

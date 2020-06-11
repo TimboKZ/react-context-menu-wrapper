@@ -1,5 +1,5 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { ContextMenuWrapper, useContextMenuEvent, useContextMenuHandlers } from 'react-context-menu-wrapper';
+import React, { useCallback,  useState } from 'react';
+import { ContextMenuWrapper, useContextMenuEvent, useContextMenuTrigger } from 'react-context-menu-wrapper';
 
 const MyContextMenu = React.memo(({ selection, toggleSelection }) => {
     const menuEvent = useContextMenuEvent();
@@ -17,8 +17,7 @@ const MyContextMenu = React.memo(({ selection, toggleSelection }) => {
 });
 
 const Box = React.memo(({ name, selected, menuId }) => {
-    const boxRef = useRef();
-    useContextMenuHandlers(boxRef, { id: menuId, data: name });
+    const boxRef = useContextMenuTrigger( { menuId: menuId, data: name });
 
     const text = selected ? `-[ ${name} ]-` : name;
     let className = 'box';
@@ -31,7 +30,7 @@ const Box = React.memo(({ name, selected, menuId }) => {
     );
 });
 
-const SharedMenu = React.memo(() => {
+const SharedMenuExample = React.memo(() => {
     const [selection, setSelection] = useState({});
     const toggleSelection = useCallback(
         name => {
@@ -56,4 +55,4 @@ const SharedMenu = React.memo(() => {
     );
 });
 
-export default SharedMenu;
+export default SharedMenuExample;

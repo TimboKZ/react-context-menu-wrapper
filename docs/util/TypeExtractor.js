@@ -1,17 +1,14 @@
 const fs = require('fs');
-const path = require('path');
 
 const lineBreakRegex = /\r?\n/;
 const exportRegex = /^export\s+/;
-const typedefPath = path.resolve(__dirname, '..', '..', 'src', 'typedef.ts');
 
-const extractTypedef = data => {
-    const { typeName } = data;
+const typeExtractor = data => {
+    const { typeName, filePath } = data;
     let offset = data.offset ? data.offset : 0;
-    const filePath = data.filePath ? data.filePath : typedefPath;
 
     const lines = fs.readFileSync(filePath, 'utf-8').split(lineBreakRegex);
-    const typeStartRegex = new RegExp(`(export)?\\s+(interface|type|enum)\\s+${typeName}\\s+(=|=\\s+{|{)`);
+    const typeStartRegex = new RegExp(`(export)?\\s+(interface|type|enum)\\s+${typeName}\\s*(<|=|=\\s+{|{)`);
 
     let typeLines = [];
     let recording = false;
@@ -47,4 +44,4 @@ const extractTypedef = data => {
     return typeLines.map(line => line.replace(exportRegex, '')).join('\n');
 };
 
-module.exports = extractTypedef;
+module.exports = typeExtractor;

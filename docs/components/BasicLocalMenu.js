@@ -1,23 +1,16 @@
-import React, { useRef } from 'react';
-import { ContextMenuWrapper, useContextMenuHandlers } from 'react-context-menu-wrapper';
+import React from 'react';
+import { ContextMenuWrapper, useContextMenuTrigger } from 'react-context-menu-wrapper';
 
 const menuId = 'my-component-local-menu';
 
-const MyContextMenuTrigger = React.memo(() => {
-    const bannerRef = useRef();
-    useContextMenuHandlers(bannerRef, { id: menuId });
-
-    return (
-        <div ref={bannerRef} className="banner">
-            Right click or long-press this box
-        </div>
-    );
-});
-
 const LocalMenuExample = React.memo(() => {
+    const bannerRef = useContextMenuTrigger({ menuId: menuId });
+
     return (
         <React.Fragment>
-            <MyContextMenuTrigger />
+            <div ref={bannerRef} className="banner">
+                Right click or long-press this box
+            </div>
 
             <ContextMenuWrapper id={menuId}>
                 <div className="context-menu" style={{ backgroundColor: '#d6fffc' }}>
