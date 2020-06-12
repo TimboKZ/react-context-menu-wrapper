@@ -1,4 +1,4 @@
-import React, { useCallback,  useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { ContextMenuWrapper, useContextMenuEvent, useContextMenuTrigger } from 'react-context-menu-wrapper';
 
 const MyContextMenu = React.memo(({ selection, toggleSelection }) => {
@@ -17,7 +17,7 @@ const MyContextMenu = React.memo(({ selection, toggleSelection }) => {
 });
 
 const Box = React.memo(({ name, selected, menuId }) => {
-    const boxRef = useContextMenuTrigger( { menuId: menuId, data: name });
+    const boxRef = useContextMenuTrigger({ menuId: menuId, data: name });
 
     const text = selected ? `-[ ${name} ]-` : name;
     let className = 'box';

@@ -4,7 +4,7 @@
  * @license MIT
  */
 
-import {Nullable} from 'tsdef';
+import { Nullable } from 'tsdef';
 import {
     addLongPressTimeout,
     clearLongPressTimeout,

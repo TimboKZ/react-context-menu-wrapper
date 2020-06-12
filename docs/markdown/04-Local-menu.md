@@ -23,7 +23,7 @@ const MyTriggerComponent = () => {
 **That's it!** The code snippet below shows a complete example of how local menus are defined.
 
 ```jsx
-import React, { useRef } from 'react';
+import React from 'react';
 import { ContextMenuWrapper, useContextMenuTrigger } from 'react-context-menu-wrapper';
 
 export const LocalMenuExample = () => {
