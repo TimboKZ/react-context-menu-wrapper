@@ -1,6 +1,9 @@
 .idea/
-demo/
+docs/
 src/
 .eslintrc.js
 .prettierrc.js
+babel.*
+styleguide.*
 tsconfig.json
+webpack.*
